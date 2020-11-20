@@ -1,12 +1,14 @@
 var express = require('express');
 var mysql = require("mysql");
+var bodyParser = require('body-parser');
 
 var app = express();
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
-app.set('port', '8352');
+app.set('port', 8352);
+var port = 8352;
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(express.static("public"));
@@ -23,14 +25,50 @@ var pool = mysql.createPool({
 // and last name.
 app.get('/', function(req, res, next)
 {
-    var sqlStatement = 'SELECT * FROM Users INNER JOIN ExpertSubjects INNER JOIN ExpertLinks INNER JOIN ExpertClasses WHERE Users.lastName = ? AND Users.firstName = ? AND Users.user_id = ExpertSubjects.user_id AND Users.user_id = ExpertLinks.user_id AND Users.user_id = ExpertClasses.user_id', [req.query.lastname], [req.query.firstname];
-    pool.query(sqlStatement, function(err, result, fields)
-    {
-        var userInfo = JSON.stringify(result);
-        res.send(userInfo);
-    });
+    res.render('layout');
 });
 
+app.get('/advancedSearch', function(req, res, next)
+{
+    res.render('advancedSearch');
+});
+
+app.get('/basicProfile', function(req, res, next)
+{
+    res.render('basicProfile');
+});
+
+app.get('/basicProfileModify', function(req, res, next)
+{
+    res.render('basicProfileModify');
+});
+
+app.get('/layout', function(req, res, next)
+{
+    res.render('layout');
+});
+
+app.get('/memberSearch', function(req, res, next)
+{
+    res.render('memberSearch');
+});
+
+app.get('/search', function(req, res, next)
+{
+    res.render('search');
+});
+
+app.get('/search01', function(req, res, next)
+{
+    res.render('search01');
+});
+
+app.get('/searchResult', function(req, res, next)
+{
+    res.render('searchResult');
+});
+
+/*
 // This should create a new user in the user database
 app.get('/add', function(req, res, next)
 {
@@ -42,4 +80,35 @@ app.get('/add', function(req, res, next)
         res.send(sendData);
         });
         
+});
+
+app.get('/addCourse', function(req, res, next)
+{
+    var sqlStatement = 'INSERT INTO ExpertSubjects (user_id, subject_id) VALUES (?, ?)', [req.query.user_id, req.query.subject_id];
+    
+    pool.query(sqlStatement, function(err, rows, fields)
+        {
+        var sendData = JSON.stringify(rows);
+        res.send(sendData);
+        });
+        
+});
+*/
+app.get('/searchSkill', function(req, res, next)
+{
+    
+    var sqlStatement = "SELECT * FROM `Subjects` WHERE `description` = 'Python'";
+    pool.query(sqlStatement, function(err, result, fields)
+    {
+        var userInfo = JSON.stringify(result);
+        console.log(userInfo);
+        res.send(userInfo);
+    });
+    
+
+});
+
+
+app.listen(app.get('port'), function(){
+  console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
 });
