@@ -25,15 +25,47 @@ var pool = mysql.createPool({
 // and last name.
 app.get('/', function(req, res, next)
 {
-    console.log("boobs");
-    /*var sqlStatement = 'SELECT * FROM Users INNER JOIN ExpertSubjects INNER JOIN ExpertLinks INNER JOIN ExpertClasses WHERE Users.lastName = ? AND Users.firstName = ? AND Users.user_id = ExpertSubjects.user_id AND Users.user_id = ExpertLinks.user_id AND Users.user_id = ExpertClasses.user_id', [req.query.lastname], [req.query.firstname];
-    pool.query(sqlStatement, function(err, result, fields)
-    {
-        var userInfo = JSON.stringify(result);
-        res.send(userInfo);
-    });
-    */
     res.render('layout');
+});
+
+app.get('/advancedSearch', function(req, res, next)
+{
+    res.render('advancedSearch');
+});
+
+app.get('/basicProfile', function(req, res, next)
+{
+    res.render('basicProfile');
+});
+
+app.get('/basicProfileModify', function(req, res, next)
+{
+    res.render('basicProfileModify');
+});
+
+app.get('/layout', function(req, res, next)
+{
+    res.render('layout');
+});
+
+app.get('/memberSearch', function(req, res, next)
+{
+    res.render('memberSearch');
+});
+
+app.get('/search', function(req, res, next)
+{
+    res.render('search');
+});
+
+app.get('/search01', function(req, res, next)
+{
+    res.render('search01');
+});
+
+app.get('/searchResult', function(req, res, next)
+{
+    res.render('searchResult');
 });
 
 /*

@@ -26,7 +26,7 @@
                     <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                    <a class="nav-link" href="#">Login</a>
                 </li>
             </ul>
         </div>
@@ -46,13 +46,8 @@
             <div class="col-sm-3"></div>
             <div class="col-sm-3 pt-4 border-top border-left border-success">
                 <ul>
-                    <h5 class="font-weight-bold"> skills: 
-                        <form class = "form-inline" action="">
-                            <input id="searchSkillInput" class="form-control mr-sm-2" type="search" placeholder="Skills" aria-label="Search">
-                            <button id="addSkillButton" type="button" class="btn btn-primary">Add</button>
-                        </form>
-                    </h5>
-                    <li>Python <button type="button" class="btn btn-danger">Remove</button></li>
+                    <h5 class="font-weight-bold"> skills: </h5>
+                    <li>Python</li>
                     <li>Agile</li>
                     <li>C++</li>
                     <li>C#</li>
@@ -119,8 +114,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-    <script src="./searchScript.js"></script>
-    <script src="./databaseConnection.js"></script>
 </body>
 
 </html>
