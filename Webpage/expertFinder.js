@@ -23,31 +23,6 @@ var pool = mysql.createPool({
 });
 
 
-function login(event)
-{
-    var loginForm = document.getElementById("login");
-    var req = new XMLHttpRequest();
-    // Yes this is a bad idea - the password is shown in the clear will fix later
-    payload = "/login?username=" + loginForm.elements.username.value + "&password=" + loginForm.elements.password.value;
-
-    req.open("GET", payload, true);
-
-    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-    req.send(null);
-    // Add the event listener for loading
-    req.addEventListener("load", function()
-    {
-
-    });
-
-}
-
-function createListeners()
-{
-    document.getElementById("loginbutton").addEventListener("click", login);
-}
-
 // This should render each of the pages.
 app.get('/', function(req, res, next)
 {
@@ -63,6 +38,18 @@ app.get('/login', function(req, res, next)
         {
             var SendData = JSON.stringify(rows);
             res.send(sendData);
+        });
+
+});
+
+app.get('/register', function(req, res, next)
+{
+    sqlStatement = "INSERT INTO Users (username, lastname, firstname, password) VALUES (?, ?, ?, ?)", [req.query.username, req.query.lastname, req.query.lastname, req.query.username];
+    
+    pool.query(sqlStatement, function(err, rows, fields)
+        {
+        var sendData = JSON.stringify(rows);
+        res.send(sendData);
         });
 
 });
@@ -92,6 +79,11 @@ app.get('/memberSearch', function(req, res, next)
     res.render('memberSearch');
 });
 
+app.get('/register', function(req, res, next)
+{
+    res.render('register');
+});
+
 app.get('/search', function(req, res, next)
 {
     res.render('search');
@@ -108,18 +100,7 @@ app.get('/searchResult', function(req, res, next)
 });
 
 /*
-// This should create a new user in the user database
-app.get('/add', function(req, res, next)
-{
-    var sqlStatement = 'INSERT INTO Users (username, lastname, firstname, password) VALUES (?, ?, ?, ?)', [req.query.username, req.query.lastname, req.query.lastname, req.query.username];
-    
-    pool.query(sqlStatement, function(err, rows, fields)
-        {
-        var sendData = JSON.stringify(rows);
-        res.send(sendData);
-        });
-        
-});
+
 
 app.get('/addCourse', function(req, res, next)
 {
@@ -147,6 +128,16 @@ app.get('/searchSkill', function(req, res, next)
 
 });
 
+app.use(function (req, res) {
+    res.status(404);
+    res.render('404');
+});
+
+app.use(function (err, req, res, next) {
+    console.error(err.stack);
+    res.status(500);
+    res.render('500');
+});
 
 app.listen(app.get('port'), function(){
   console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
