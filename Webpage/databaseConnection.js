@@ -21,8 +21,7 @@ var pool = mysql.createPool({
     database : 'cs361_levinw'
 });
 
-// This should return the information by a passed in value set of first and
-// and last name.
+// This should render each of the pages.  
 app.get('/', function(req, res, next)
 {
     res.render('layout');
@@ -44,6 +43,9 @@ app.get('/basicProfileModify', function(req, res, next)
 });
 
 app.get('/layout', function(req, res, next)
+});
+
+app.get('/search01', function(req, res, next)
 {
     res.render('layout');
 });
