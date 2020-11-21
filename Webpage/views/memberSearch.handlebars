@@ -9,10 +9,12 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        form-horizontal {justify-content:center;}
+    </style>
 </head>
 
 <body>
-
     <nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
         <a class="navbar-brand" href="#">Expert Finder - Oregon State University</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -26,16 +28,37 @@
                     <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                    <a class="nav-link" href="#">Login</a>
                 </li>
             </ul>
         </div>
         <form class="form-inline">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-          </form>
+        </form>
     </nav>
     
+
+    <section class="jumbotron text-center">
+        <h1> Already know your Expert?</h1>
+        <h4> Enter expert's name </h4>
+        <br>
+    <div class="row justify-content-center">
+        <div class="col=md-12">
+            <form class="form-horizontal"> 
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+    </section>
+    <section>
+        <div class="row justify-content-center">
+            <div class="col=md-6">
+                Looking for more options? Try <a href="./search.html">Search</a> or <a href="./advancedSearch.html">Advanced Search</a>
+            </div>
+        </div>
+    </section>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -48,6 +71,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+    <script src="./myScript.js"></script>
 </body>
 
 </html>
