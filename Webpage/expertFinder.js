@@ -69,6 +69,19 @@ app.get('/basicProfileModify', function(req, res, next)
     res.render('basicProfileModify');
 });
 
+app.post('/basicProfileModify/addSkill',function(req,res){
+  var sqlStatement = 'INSERT INTO ExpertSubjects (user_id, subject_id) VALUES (' + req.body.userID + ',' + req.body.skill + ')';
+  console.log(sqlStatement);
+  pool.query(sqlStatement, function(err, rows, fields)
+    {
+    var sendData = JSON.stringify(rows);
+    res.send(sendData);
+    });
+
+  res.render('basicProfileModify');
+});
+
+
 app.get('/search01', function(req, res, next)
 {
     res.render('layout');
