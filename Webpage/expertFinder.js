@@ -22,6 +22,32 @@ var pool = mysql.createPool({
     database : 'cs361_levinw'
 });
 
+
+function login(event)
+{
+    var loginForm = document.getElementById("login");
+    var req = new XMLHttpRequest();
+    // Yes this is a bad idea - the password is shown in the clear will fix later
+    payload = "/login?username=" + loginForm.elements.username.value + "&password=" + loginForm.elements.password.value;
+
+    req.open("GET", payload, true);
+
+    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    req.send(null);
+    // Add the event listener for loading
+    req.addEventListener("load", function()
+    {
+
+    });
+
+}
+
+function createListeners()
+{
+    document.getElementById("loginbutton").addEventListener("click", login);
+}
+
 // This should render each of the pages.
 app.get('/', function(req, res, next)
 {
@@ -30,14 +56,14 @@ app.get('/', function(req, res, next)
 
 app.get('/login', function(req, res, next)
 {
-    sqlStatement="SELECT * FROM Users WHERE username = ? AND password = ?", [req.query.username, req.query.password];
+        sqlStatement="SELECT * FROM Users WHERE username = ? AND password = ?", [req.query.username, req.query.password];
 
-    pool.query(sqlStatement, 
-    function (err, rows, fields)
-    {
-        var SendData = JSON.stringify(rows);
-        res.send(sendData);
-    });
+        pool.query(sqlStatement, 
+        function (err, rows, fields)
+        {
+            var SendData = JSON.stringify(rows);
+            res.send(sendData);
+        });
 
 });
 
