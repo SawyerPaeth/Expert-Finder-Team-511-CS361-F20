@@ -28,6 +28,19 @@ app.get('/', function(req, res, next)
     res.render('expertFinder');
 });
 
+app.get('/login', function(req, res, next)
+{
+    sqlStatement="SELECT * FROM Users WHERE username = ? AND password = ?", [req.query.username, req.query.password];
+
+    pool.query(sqlStatement, 
+    function (err, rows, fields)
+    {
+        var SendData = JSON.stringify(rows);
+        res.send(sendData);
+    });
+
+});
+
 app.get('/advancedSearch', function(req, res, next)
 {
     res.render('advancedSearch');
