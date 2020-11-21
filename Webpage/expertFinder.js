@@ -3,6 +3,7 @@ var mysql = require("mysql");
 var bodyParser = require('body-parser');
 
 var app = express();
+// This tells you the main.handlebars is the default layout
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 
 app.engine('handlebars', handlebars.engine);
@@ -21,11 +22,10 @@ var pool = mysql.createPool({
     database : 'cs361_levinw'
 });
 
-// This should return the information by a passed in value set of first and
-// and last name.
+// This should render each of the pages.
 app.get('/', function(req, res, next)
 {
-    res.render('layout');
+    res.render('expertFinder');
 });
 
 app.get('/advancedSearch', function(req, res, next)
@@ -43,7 +43,7 @@ app.get('/basicProfileModify', function(req, res, next)
     res.render('basicProfileModify');
 });
 
-app.get('/layout', function(req, res, next)
+app.get('/search01', function(req, res, next)
 {
     res.render('layout');
 });
