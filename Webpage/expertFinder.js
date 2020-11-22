@@ -67,7 +67,7 @@ app.get('/login', function(req, res, next)
 
 });
 
-app.post('/login', (req, res) => {
+app.post('/expertFinder', (req, res) => {
     const { email, password } = req.body;
     const hashedPassword = getHashedPassword(password);
 
@@ -91,7 +91,7 @@ app.post('/login', (req, res) => {
                 // Redirect user to the protected page
                 res.redirect('/protected');
             } else {
-                res.render('login', {
+                res.render('expertFinder', {
                     message: 'Invalid username or password',
                     messageClass: 'alert-danger'
                 });
@@ -132,7 +132,7 @@ app.post('/register', (req, res) => {
             res.send(sendData);
         });
 
-        res.render('login', {
+        res.render('expertFinder', {
             message: 'Registration Complete. Please login to continue.',
             messageClass: 'alert-success'
         });
