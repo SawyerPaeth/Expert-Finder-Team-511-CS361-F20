@@ -110,8 +110,7 @@ app.post('/register', (req, res, next) => {
     // Check if the password and confirm password fields match
     if (password === confirmPassword) {
 
-        sqlStatement = "SELECT username FROM Users WHERE user.username = " + email.toString();
-        pool.query(sqlStatement, function(err, rows, field) {
+        pool.query('SELECT username FROM Users WHERE user.username = ?', [email], function(err, rows, field) {
             var users = JSON.stringify(rows);
             if (err)
             {
