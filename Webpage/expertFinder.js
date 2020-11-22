@@ -131,12 +131,9 @@ app.post('/register', (req, res, next) => {
                 };
             };
         });
-        console.log("test4");
         const hashedPassword = getHashedPassword(password);
-        console.log("test5");
 
-        sqlStatement = "INSERT INTO Users (username, lastname, firstname, password) VALUES (?, ?, ?, ?)", [email, firstName, lastName, password];
-        pool.query(sqlStatement, function (err, rows, fields) {
+        pool.query('INSERT INTO Users (username, lastname, firstname, password) VALUES (?, ?, ?, ?)', [email, firstName, lastName, password], function (err, rows, fields) {
             var sendData = JSON.stringify(rows);
             res.render('/expertFinder');
             return;
