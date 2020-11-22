@@ -1,28 +1,40 @@
-<h2>Oregon State University Expert Finder</h2>
-<div class="content-section">
-    <form id="register">
-        <h3 class="card-title text-center">Register</h3>
-       
-        <div class="form-group text-center">
-        <label>User Name</label> <input type="text" name="username" id="username">
-        </div>
+<div class="row justify-content-md-center" style="margin-top: 30px">
+    <div class="col-md-4">
 
-        <div class="form-group text-center">
-        <label>First Name</label> <input type="text" name="firstname" id="firstname">
-        </div>
-                
-        <div class="form-group text-center">
-        <label>Last Name</label> <input type="text" name="lastname" id="lastname">
-        </div>
+        {{#if message}}
+            <div class="alert {{messageClass}}" role="alert">
+                {{message}}
+            </div>
+        {{/if}}
 
-        <div class="form-group text-center">
-        <label>Password</label> <input type="text" name="password" id="password">
-        </div>
-        
-        <br>
-        <div class="form-group text-center">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="register" value="register" id=registerbutton>Register</button>
-        </div>
-        
-    </form>
+        <form method="POST" action="/register">
+            <div class="form-group">
+                <label for="firstNameInput">First Name</label>
+                <input name="firstName" type="text" class="form-control" id="firstNameInput">
+            </div>
+
+            <div class="form-group">
+                <label for="lastNameInput">Last Name</label>
+                <input name="firstName" type="text" class="form-control" id="lastNameInput">
+            </div>
+
+            <div class="form-group">
+                <label for="emailInput">Email address</label>
+                <input name="email" type="email" class="form-control" id="emailInput" placeholder="Enter email">
+            </div>
+
+            <div class="form-group">
+                <label for="passwordInput">Password</label>
+                <input name="password" type="password" class="form-control" id="passwordInput" placeholder="Password">
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPasswordInput">Confirm Password</label>
+                <input name="confirmPassword" type="password" class="form-control" id="confirmPasswordInput"
+                    placeholder="Re-enter your password here">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+    </div>
 </div>

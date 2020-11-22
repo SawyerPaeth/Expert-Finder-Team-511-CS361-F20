@@ -5,14 +5,18 @@ var bodyParser = require('body-parser');
 var app = express();
 // This tells you the main.handlebars is the default layout
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
+const cookieParser = require('cookie-parser');
+const crypto = require('crypto');
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', 8352);
 var port = 8352;
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static("public"));
+
+app.use(cookieParser());
 
 var pool = mysql.createPool({
   connectionLimit : 10,
@@ -22,6 +26,26 @@ var pool = mysql.createPool({
     database : 'cs361_levinw'
 });
 
+app.use((req, res, next) => {
+    // Get auth token from the cookies
+    const authToken = req.cookies['AuthToken'];
+
+    // Inject the user to the request
+    req.user = authTokens[authToken];
+
+    next();
+});
+
+// This hashes a user password
+const getHashedPassword = (password) => {
+    const sha256 = crypto.createHash('sha256');
+    const hash = sha256.update(password).digest('base64');
+    return hash;
+}
+
+const generateAuthToken = () => {
+    return crypto.randomBytes(30).toString('hex');
+}
 
 // This should render each of the pages.
 app.get('/', function(req, res, next)
@@ -31,7 +55,6 @@ app.get('/', function(req, res, next)
 
 app.get('/login', function(req, res, next)
 {
-        sqlStatement="SELECT * FROM Users WHERE username = ? AND password = ?", [req.query.username, req.query.password];
 
         pool.query(sqlStatement, 
         function (err, rows, fields)
@@ -42,17 +65,78 @@ app.get('/login', function(req, res, next)
 
 });
 
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+    const hashedPassword = getHashedPassword(password);
+
+    sqlStatement="SELECT * FROM Users WHERE username = ? AND password = ?", [email, hashedPassword];
+    pool.query(sqlStatement, 
+        function (err, rows, fields)
+        {
+            const user = rows.find(u => {
+                return u.email === email && hashedPassword === u.password
+            });
+
+            if (user) {
+                const authToken = generateAuthToken();
+
+                // Store authentication token
+                authTokens[authToken] = user;
+
+                // Setting the auth token in cookies
+                res.cookie('AuthToken', authToken);
+
+                // Redirect user to the protected page
+                res.redirect('/protected');
+            } else {
+                res.render('login', {
+                    message: 'Invalid username or password',
+                    messageClass: 'alert-danger'
+                });
+            }
+        });
+});
+
 app.get('/register', function(req, res, next)
 {
-    sqlStatement = "INSERT INTO Users (username, lastname, firstname, password) VALUES (?, ?, ?, ?)", [req.query.username, req.query.lastname, req.query.lastname, req.query.username];
-    
-    pool.query(sqlStatement, function(err, rows, fields)
-        {
-        var sendData = JSON.stringify(rows);
-        res.send(sendData);
+    res.render('register');
+});
+
+
+app.post('/register', (req, res) => {
+    const { email, firstName, lastName, password, confirmPassword } = req.body;
+
+    // Check if the password and confirm password fields match
+    if (password === confirmPassword) {
+
+        // Check if user with the same email is also registered
+        if (users.find(user => user.email === email)) {
+            res.render('register', {
+                message: 'User already registered.',
+                messageClass: 'alert-danger'
+            });
+
+            return;
+        }
+        const hashedPassword = getHashedPassword(password);
+
+        sqlStatement = "INSERT INTO Users (username, lastname, firstname, password) VALUES (?, ?, ?, ?)", [email, firstName, lastName, password];
+        pool.query(sqlStatement, function (err, rows, fields) {
+            var sendData = JSON.stringify(rows);
+            res.send(sendData);
         });
 
-});
+        res.render('login', {
+            message: 'Registration Complete. Please login to continue.',
+            messageClass: 'alert-success'
+        });
+    } else {
+        res.render('register', {
+            message: 'Password does not match.',
+            messageClass: 'alert-danger'
+        });
+    }
+});     
 
 app.get('/advancedSearch', function(req, res, next)
 {
@@ -90,11 +174,6 @@ app.get('/search01', function(req, res, next)
 app.get('/memberSearch', function(req, res, next)
 {
     res.render('memberSearch');
-});
-
-app.get('/register', function(req, res, next)
-{
-    res.render('register');
 });
 
 app.get('/search', function(req, res, next)
