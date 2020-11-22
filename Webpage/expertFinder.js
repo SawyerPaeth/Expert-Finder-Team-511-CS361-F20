@@ -114,7 +114,7 @@ app.post('/register', (req, res) => {
         pool.query(sqlStatement, function(err, rows, field) {
             var users = JSON.stringify(rows);
             // Check if user with the same email is also registered
-            if (users.email === email) {
+            if (users.username === email) {
                 res.render('register', {
                     message: 'User already registered.',
                     messageClass: 'alert-danger'
