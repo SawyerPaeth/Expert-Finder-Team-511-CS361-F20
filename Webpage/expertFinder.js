@@ -26,6 +26,8 @@ var pool = mysql.createPool({
     database : 'cs361_levinw'
 });
 
+const authTokens = {};
+
 app.use((req, res, next) => {
     // Get auth token from the cookies
     const authToken = req.cookies['AuthToken'];
