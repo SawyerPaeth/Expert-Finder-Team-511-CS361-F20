@@ -110,7 +110,7 @@ app.post('/register', (req, res, next) => {
     // Check if the password and confirm password fields match
     if (password === confirmPassword) {
 
-        pool.query('SELECT username FROM Users WHERE user.username = ?', [email], function(err, rows, field) {
+        pool.query('SELECT username FROM Users WHERE Users.username = ?', [email], function(err, rows, field) {
             var users = JSON.stringify(rows);
             if (err)
             {
@@ -119,15 +119,19 @@ app.post('/register', (req, res, next) => {
             }
             // Check if user with the same email is also registered
             for (var x in rows) {
+                console.log("test1");
                 if (rows[x].username === email) {
-                    res.render('register', {
+                    res.render('/register', {
                         message: 'User already registered.',
                         messageClass: 'alert-danger'
                     });
 
+                    console.log("test2");
                     return;
 
                 };
+
+                console.log("test3");
             };
         });
         const hashedPassword = getHashedPassword(password);
