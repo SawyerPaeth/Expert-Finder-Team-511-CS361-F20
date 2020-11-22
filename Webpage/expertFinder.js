@@ -120,28 +120,26 @@ app.post('/register', (req, res, next) => {
             }
             // Check if user with the same email is also registered
             for (var x in rows) {
-                console.log("test1");
                 if (rows[x].username === email) {
                     res.render('/register', {
                         message: 'User already registered.',
                         messageClass: 'alert-danger'
                     });
 
-                    console.log("test2");
                     return;
 
                 };
-
-                console.log("test3");
             };
         });
         console.log("test4");
         const hashedPassword = getHashedPassword(password);
+        console.log("test5");
 
         sqlStatement = "INSERT INTO Users (username, lastname, firstname, password) VALUES (?, ?, ?, ?)", [email, firstName, lastName, password];
         pool.query(sqlStatement, function (err, rows, fields) {
             var sendData = JSON.stringify(rows);
-            res.send(sendData);
+            res.render('/expertFinder');
+            return;
         });
 
         res.render('expertFinder', {
