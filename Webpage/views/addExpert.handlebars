@@ -1,0 +1,66 @@
+<div class="row justify-content-md-center" style="margin-top: 30px">
+	<div class="col-md-6">
+
+        {{#if message}}
+            <div class="alert {{messageClass}}" role="alert">
+                {{message}}
+            </div>
+        {{/if}}
+
+    <form method="POST" action="/addExpert">
+    	<fieldset>
+    		<legend>Are You Adding yourself as an Expert or Someone Else?</legend>
+    		<div class="form-group">    			
+    			<input type="radio" name="myself" id="myself">
+    			<label for="myself">Myself</label>
+    			<br>
+    			<input type="radio" name="someone_else" id="someone_else">
+        		<label for="someone_else">Someone Else</label>
+        	</div>
+       	</fieldset>
+       	<fieldset>
+       		<legend>Expert Contact Information</legend>
+            <div class="form-row">        	
+        		<div class="form-group col-md-6">
+        			<label for="first_name">First Name</label>
+        			<input type="text" class="form-control" id="first_name" placeholder="First Name">
+        		</div>
+        		<div class="form-group col-md-6">
+        			<label for="last_name">Last Name</label>
+        			<input type="text" class="form-control" id="last_name" placeholder="Last Name">
+        		</div>
+        	</div>
+        	<div class="form-group">
+        		<label for="expert_email">Email</label>
+        		<input type="email" class="form-control" id="expert_email" placeholder="name@domain.com">
+        	</div>
+        	<div class="form-group">
+        		<label for="expert_twitter">Twitter</label>
+        		<input type="text" class="form-control" id="expert_twitter" placeholder="http://twitter.com/[username]">
+        	</div>
+        	<div class="form-group">
+        		<label for="expert_github">GitHub</label>
+        		<input type="text" class="form-control" id="expert_github" placeholder="http://github.com/[username]">
+        	</div>
+        	<div class="form-group">
+        		<label for="expert_linkedin">LinkedIn</label>
+        		<input type="text" class="form-control" id="expert_linkedin" placeholder="http://linkedin.com/in/[linkedinyourname]">
+        	</div>
+        </fieldset>
+        <fieldset>
+        	<legend>Expert Areas</legend>
+        		<div="form-group">
+        			<label for="classes">Classes:</label>
+        			<input type="text" class="form-control" id="classes" placeholder="Enter your classes spearated by a comma i.e. CS 361, CS 290, etc">
+        		<div="form-group">
+        			<label for="skills">Skills:</label>
+        			<input type="text" class="form-control" id="skills" placeholder="Enter your skills spearated by a comma i.e. Python, javascript, etc">
+        		<div="form-group">
+        			<label for="Organizations">Organizations:</label>
+        			<input type="text" class="form-control" id="classes" placeholder="Enter your Organizations spearated by a comma i.e. Professor, Microsoft, etc">
+        </fieldset>
+        <br>
+    <button type="submit" class="btn btn-primary" id="submit_expert">Submit Expert</button>
+	</form>
+	</div>
+</div>
