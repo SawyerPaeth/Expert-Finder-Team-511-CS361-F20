@@ -145,10 +145,26 @@ app.get('/addExpert', function(req, res, next)
 	res.render('addExpert');
 });
 
+// Ok to add an expert you need to do the following:
+// 1. Insert their basic information into the User table.  
+// 2. Pull and store off their userid - this is the unique identifier in the user's table
+// 3. Insert a link into the Links table 
+// 4. Pull the link link id - unique identifier for the link
+// 5. Put the link id and user id into the ExpertLinks table 
+// - repeat steps 3-5 as necessary -
+// 6. Insert a class into the Classes table
+// 7. Pull the class id - unique identifier for the Class
+// 8. Put the class id and user id into the ExpertClass table
+// - repeat steps 6-8 as necessary -
+// 9. Insert a subject into the Subject table
+// 10. Pull the subject id - unique identifier for the Subject
+// 11. Put the subject id and user id into the ExpertSubject table
+// - repeat steps 9-12 as necessary - 
+// 12. have a beer or whatever your celebatory drink is 
 app.post('/addExpert', (req, res) => {
 	const { first_name, last_name, expert_email, expert_twitter, expert_github, expert_linkedin, classes, skills, organizations } = req.body;
 
-	sqlStatement = "INSERT INTO Experts (first_name, last_name, expert_email, expert_twitter, expert_github, expert_linkedin, classes, skills, organizations) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [first_name, last_name, expert_email, expert_twitter, expert_github, expert_linkedin, classes, skills, organizations];
+	sqlStatement = "INSERT INTO Users (firstName, lastName, username, expert_twitter, expert_github, expert_linkedin, classes, skills, organizations) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [first_name, last_name, expert_email, expert_twitter, expert_github, expert_linkedin, classes, skills, organizations];
 	pool.query(sqlStatement, function (err, rows, fields) {
 		var sendData = JSON.stringify(rows);
 		res.send(sendData);
@@ -213,8 +229,6 @@ app.get('/searchResult', function(req, res, next)
 });
 
 /*
-
-
 app.get('/addCourse', function(req, res, next)
 {
     var sqlStatement = 'INSERT INTO ExpertSubjects (user_id, subject_id) VALUES (?, ?)', [req.query.user_id, req.query.subject_id];
