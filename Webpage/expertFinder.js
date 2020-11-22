@@ -189,11 +189,23 @@ app.get('/advancedSearch', function(req, res, next)
 
 app.get('/basicProfile', function(req, res, next)
 {
+    pool.query(sqlStatement,
+        function (err, rows, fields)
+        {
+            var SendData = JSON.stringify(rows);
+            res.send(sendData);
+        });
     res.render('basicProfile');
 });
 
 app.get('/basicProfileModify', function(req, res, next)
 {
+    pool.query(sqlStatement,
+        function (err, rows, fields)
+        {
+            var SendData = JSON.stringify(rows);
+            res.send(sendData);
+        });
     res.render('basicProfileModify');
 });
 
