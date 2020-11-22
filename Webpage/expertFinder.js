@@ -135,8 +135,7 @@ app.post('/register', (req, res, next) => {
 
         pool.query('INSERT INTO Users (username, lastname, firstname, password) VALUES (?, ?, ?, ?)', [email, firstName, lastName, password], function (err, rows, fields) {
             var sendData = JSON.stringify(rows);
-            res.render('/expertFinder');
-            return;
+            console.log('INSERT INTO Users (username, lastname, firstname, password) VALUES (?, ?, ?, ?)', [email, firstName, lastName, password]);
         });
 
         res.render('expertFinder', {
