@@ -125,17 +125,14 @@ app.post('/register', (req, res, next) => {
                         message: 'User already registered.',
                         messageClass: 'alert-danger'
                     });
-
                     return;
-
                 };
             };
         });
         const hashedPassword = getHashedPassword(password);
 
-        pool.query('INSERT INTO Users (username, lastname, firstname, password) VALUES (?, ?, ?, ?)', [email, firstName, lastName, password], function (err, rows, fields) {
+        pool.query('INSERT INTO Users (username, lastname, firstname, password) VALUES (?, ?, ?, ?)', [email, firstName, lastName, hashedPassword], function (err, rows, fields) {
             var sendData = JSON.stringify(rows);
-            console.log('INSERT INTO Users (username, lastname, firstname, password) VALUES (?, ?, ?, ?)', [email, firstName, lastName, password]);
         });
 
         res.render('expertFinder', {
