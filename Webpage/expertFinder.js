@@ -113,15 +113,22 @@ app.post('/register', (req, res) => {
         sqlStatement = "SELECT username FROM Users WHERE user.email = email", [email];
         pool.query(sqlStatement, function(err, rows, field) {
             var users = JSON.stringify(rows);
-            // Check if user with the same email is also registered
-            if (users.username === email) {
-                res.render('register', {
-                    message: 'User already registered.',
-                    messageClass: 'alert-danger'
-                });
-
+            if (err)
+            {
+                next(err);
                 return;
+            }
+            // Check if user with the same email is also registered
+            for (var x in rows) {
+                if (rows[x].username === email) {
+                    res.render('register', {
+                        message: 'User already registered.',
+                        messageClass: 'alert-danger'
+                    });
 
+                    return;
+
+                };
             };
         });
         const hashedPassword = getHashedPassword(password);
