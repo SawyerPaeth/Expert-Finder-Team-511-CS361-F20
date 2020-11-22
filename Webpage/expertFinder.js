@@ -140,6 +140,25 @@ app.post('/register', (req, res) => {
     }
 });     
 
+app.get('/addExpert', function(req, res, next)
+{
+	res.render('addExpert');
+});
+
+app.post('/addExpert', (req, res) => {
+	const { first_name, last_name, expert_email, expert_twitter, expert_github, expert_linkedin, classes, skills, organizations } = req.body;
+
+	sqlStatement = "INSERT INTO Experts (first_name, last_name, expert_email, expert_twitter, expert_github, expert_linkedin, classes, skills, organizations) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [first_name, last_name, expert_email, expert_twitter, expert_github, expert_linkedin, classes, skills, organizations];
+	pool.query(sqlStatement, function (err, rows, fields) {
+		var sendData = JSON.stringify(rows);
+		res.send(sendData);
+	});
+	res.render('addExpert', {
+		message: 'Expert Added',
+		messageClass: 'alert-success'
+	});
+});
+
 app.get('/advancedSearch', function(req, res, next)
 {
     res.render('advancedSearch');
