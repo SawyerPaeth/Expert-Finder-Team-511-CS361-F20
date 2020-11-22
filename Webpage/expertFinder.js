@@ -115,6 +115,7 @@ app.post('/register', (req, res, next) => {
             if (err)
             {
                 next(err);
+                console.log(err.toString());
                 return;
             }
             // Check if user with the same email is also registered
@@ -134,6 +135,7 @@ app.post('/register', (req, res, next) => {
                 console.log("test3");
             };
         });
+        console.log("test4");
         const hashedPassword = getHashedPassword(password);
 
         sqlStatement = "INSERT INTO Users (username, lastname, firstname, password) VALUES (?, ?, ?, ?)", [email, firstName, lastName, password];
