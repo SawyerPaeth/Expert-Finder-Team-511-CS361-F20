@@ -192,7 +192,7 @@ app.get('/basicProfile', function(req, res, next)
     pool.query(sqlStatement,
         function (err, rows, fields)
         {
-            var SendData = JSON.stringify(rows);
+            var sendData = JSON.stringify(rows);
             res.send(sendData);
         });
     res.render('basicProfile');
