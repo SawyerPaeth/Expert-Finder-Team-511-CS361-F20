@@ -152,6 +152,8 @@ app.get('/addExpert', function(req, res, next)
 	res.render('addExpert');
 });
 
+
+
 // Ok to add an expert you need to do the following:
 // 1. Insert their basic information into the User table.  
 // 2. Pull and store off their userid - this is the unique identifier in the user's table

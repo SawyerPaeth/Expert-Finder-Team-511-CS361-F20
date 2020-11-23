@@ -1,3 +1,7 @@
+//Added addexpert functions as a separate js file.  Easier to update if database format changes
+
+
+
 document.addEventListener('DOMContentLoaded', submitButtons);
 
 function submitButtons() {
