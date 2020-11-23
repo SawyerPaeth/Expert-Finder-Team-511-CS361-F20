@@ -187,16 +187,19 @@ app.get('/advancedSearch', function(req, res, next)
     res.render('advancedSearch');
 });
 
-app.get('/basicProfile', function(req, res, next)
-{
-    pool.query(sqlStatement,
-        function (err, rows, fields)
-        {
-            var sendData = JSON.stringify(rows);
-            res.send(sendData);
+app.get('/basicProfile', function(req, res, next){
+    var sqlStatement = "SELECT * FROM Subjects";
+    pool.query(sqlStatement, function(err, result, fields)
+    {
+        var userInfo = JSON.stringify(result);
+        console.log(userInfo);
+        res.render('basicProfile', {
+            result: result
         });
-    res.render('basicProfile');
+    });
+    
 });
+
 
 app.get('/basicProfileModify', function(req, res, next)
 {
