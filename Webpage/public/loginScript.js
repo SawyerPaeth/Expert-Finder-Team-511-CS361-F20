@@ -1,23 +1,4 @@
 
-function login(event)
-{
-    var loginForm = document.getElementById("login");
-    var req = new XMLHttpRequest();
-    // Yes this is a bad idea - the password is shown in the clear will fix later
-    payload = "/login?username=" + loginForm.elements.username.value + "&password=" + loginForm.elements.password.value;
-
-    req.open("GET", payload, true);
-
-    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-    req.send(null);
-    // Add the event listener for loading the next page
-    req.addEventListener("load", function()
-    {
-
-    });
-
-}
 
 function register(event)
 {
@@ -39,7 +20,6 @@ function register(event)
 
 function createListeners()
 {
-    document.getElementById("loginbutton").addEventListener("click", login);
     document.getElementById("registerbutton").addEventListener("click", register);
 }
 document.addEventListener("DOMContentLoaded", createListeners);
