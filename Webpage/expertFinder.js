@@ -190,17 +190,30 @@ app.get('/advancedSearch', function(req, res, next)
 });
 
 app.get('/basicProfile', function(req, res, next){
-    var sqlStatement = "SELECT * FROM Subjects";
+    var sqlStatement = "SELECT description FROM Subjects WHERE subject_id IN (SELECT subject_id FROM ExpertSubjects WHERE user_id = 1)";
     pool.query(sqlStatement, function(err, result, fields)
     {
+        
         var userInfo = JSON.stringify(result);
         console.log(userInfo);
-        res.render('basicProfile', {
-            result: result
+
+        var sqlStatement = "SELECT description FROM Classes WHERE class_id IN (SELECT class_id FROM ExpertClasses WHERE user_id = 1)";
+        pool.query(sqlStatement, function(err, result2, fields){
+            
+            var userInfo = JSON.stringify(result2);
+            console.log(userInfo)
+            
+            res.render('basicProfile', {
+                result: result,
+                result2: result2
+            });
         });
+
+        
     });
     
 });
+
 
 app.get('/basicProfileModify', function(req, res, next)
 {
