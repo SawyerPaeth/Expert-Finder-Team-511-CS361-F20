@@ -107,38 +107,61 @@ app.get('/register', function(req, res, next)
 
 app.post('/register', (req, res, next) => {
     const { email, firstName, lastName, password, confirmPassword } = req.body;
+    if (password === "") {
+        res.render('register', {
+            message: 'Cannot have an empty password.',
+            messageClass: 'alert-danger'
+        });
+        return;
+    }
+    if (email === "") {
+        res.render('register', {
+            message: 'Cannot have an empty email address.',
+            messageClass: 'alert-danger'
+        });
+        return;
+    }
     // Check if the password and confirm password fields match
     if (password === confirmPassword) {
-
-        pool.query('SELECT username FROM Users WHERE Users.username = ?', [email], function(err, rows, field) {
-            var users = JSON.stringify(rows);
-            if (err)
+        sqlStatement= 'SELECT username FROM Users WHERE Users.username = "' + email + '"';
+        pool.query(sqlStatement, function(err, rows, field) {
+        /*    if (err)
             {
                 next(err);
                 console.log(err.toString());
                 return;
-            }
+            }*/
             // Check if user with the same email is also registered
             for (var x in rows) {
                 if (rows[x].username === email) {
-                    res.render('/register', {
+                    res.render('register', {
                         message: 'User already registered.',
                         messageClass: 'alert-danger'
                     });
                     return;
                 };
             };
+            const hashedPassword = getHashedPassword(password);
+            sqlStatement = 'INSERT INTO Users (username, firstname, lastname, password) VALUES (' + email + ', ' + firstName + ', ' + lastName + ', ' + hashedPassword + ')';
+            pool.query(sqlStatement, function (err, rows, field) {
+                res.render('expertFinder', {
+                    message: 'Registration Complete. Please login to continue.',
+                    messageClass: 'alert-success'
+                });
+            });
         });
-        const hashedPassword = getHashedPassword(password);
 
-        pool.query('INSERT INTO Users (username, lastname, firstname, password) VALUES (?, ?, ?, ?)', [email, firstName, lastName, hashedPassword], function (err, rows, fields) {
+        /*
+        pool.query('INSERT INTO Users (username, firstname, lastname, password) VALUES (?, ?, ?, ?)', [email, firstName, lastName, hashedPassword], function (err, rows, fields) {
             var sendData = JSON.stringify(rows);
+            res.send(sendData);
+            if (err)
+            {
+                console.log(err);
+            }
         });
 
-        res.render('expertFinder', {
-            message: 'Registration Complete. Please login to continue.',
-            messageClass: 'alert-success'
-        });
+        */
     } else {
         res.render('register', {
             message: 'Password does not match.',
