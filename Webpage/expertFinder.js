@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 
 var app = express();
 // This tells you the main.handlebars is the default layout
-var handlebars = require('express-handlebars').create({defaultLayout:'main'});
+var handlebars = require('express-handlebars').create({ defaultLayout: 'main' });
 const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
 
@@ -12,18 +12,18 @@ app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', 8352);
 var port = 8352;
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
 app.use(cookieParser());
 
 var pool = mysql.createPool({
-  connectionLimit : 10,
-    host : 'classmysql.engr.oregonstate.edu',
-    user : 'cs361_levinw',
-    password : '8352',
-    database : 'cs361_levinw'
+    connectionLimit: 10,
+    host: 'classmysql.engr.oregonstate.edu',
+    user: 'cs361_levinw',
+    password: '8352',
+    database: 'cs361_levinw'
 });
 
 const authTokens = {};
@@ -50,17 +50,14 @@ const generateAuthToken = () => {
 }
 
 // This should render each of the pages.
-app.get('/', function(req, res, next)
-{
+app.get('/', function (req, res, next) {
     res.render('expertFinder');
 });
 
-app.get('/login', function(req, res, next)
-{
+app.get('/login', function (req, res, next) {
 
-        pool.query(sqlStatement, 
-        function (err, rows, fields)
-        {
+    pool.query(sqlStatement,
+        function (err, rows, fields) {
             var SendData = JSON.stringify(rows);
             res.send(sendData);
         });
@@ -71,39 +68,39 @@ app.post('/expertFinder', (req, res) => {
     const { email, password } = req.body;
     const hashedPassword = getHashedPassword(password);
 
-    sqlStatement="SELECT * FROM Users WHERE username = ? AND password = ?", [email, hashedPassword];
-    pool.query(sqlStatement, 
-        function (err, rows, fields)
-        {
-            const user = rows.find(u => {
-                return u.email === email && hashedPassword === u.password
+    sqlStatement = 'SELECT * FROM Users WHERE username = "' + email + '" AND password = "' + hashedPassword +'"';
+    pool.query(sqlStatement, function (err, rows, field) {
+        loggedIn = false;
+        for (var x in rows) {
+            if (rows[x].username === email && rows[x].password === hashedPassword) {
+                loggedIn = true;
+            };
+        };
+        if (loggedIn === true) {
+            const authToken = generateAuthToken();
+            console.log("Successfully logged in");
+
+            // Store authentication token
+            authTokens[authToken] = email;
+
+            // Setting the auth token in cookies
+            res.cookie('AuthToken', authToken);
+
+            // Redirect user to the protected page
+            //res.redirect('/protected');
+
+        } else {
+            res.render('expertFinder', {
+                message: 'Invalid username or password',
+                messageClass: 'alert-danger'
             });
-
-            if (user) {
-                const authToken = generateAuthToken();
-
-                // Store authentication token
-                authTokens[authToken] = user;
-
-                // Setting the auth token in cookies
-                res.cookie('AuthToken', authToken);
-
-                // Redirect user to the protected page
-                res.redirect('/protected');
-            } else {
-                res.render('expertFinder', {
-                    message: 'Invalid username or password',
-                    messageClass: 'alert-danger'
-                });
-            }
-        });
+        }
+    });
 });
 
-app.get('/register', function(req, res, next)
-{
+app.get('/register', function (req, res, next) {
     res.render('register');
 });
-
 
 app.post('/register', (req, res, next) => {
     const { email, firstName, lastName, password, confirmPassword } = req.body;
@@ -123,14 +120,8 @@ app.post('/register', (req, res, next) => {
     }
     // Check if the password and confirm password fields match
     if (password === confirmPassword) {
-        sqlStatement= 'SELECT username FROM Users WHERE Users.username = "' + email + '"';
-        pool.query(sqlStatement, function(err, rows, field) {
-        /*    if (err)
-            {
-                next(err);
-                console.log(err.toString());
-                return;
-            }*/
+        sqlStatement = 'SELECT username FROM Users WHERE Users.username = "' + email + '"';
+        pool.query(sqlStatement, function (err, rows, field) {
             // Check if user with the same email is also registered
             for (var x in rows) {
                 if (rows[x].username === email) {
@@ -151,28 +142,16 @@ app.post('/register', (req, res, next) => {
             });
         });
 
-        /*
-        pool.query('INSERT INTO Users (username, firstname, lastname, password) VALUES (?, ?, ?, ?)', [email, firstName, lastName, hashedPassword], function (err, rows, fields) {
-            var sendData = JSON.stringify(rows);
-            res.send(sendData);
-            if (err)
-            {
-                console.log(err);
-            }
-        });
-
-        */
     } else {
         res.render('register', {
             message: 'Password does not match.',
             messageClass: 'alert-danger'
         });
     }
-});     
+});
 
-app.get('/addExpert', function(req, res, next)
-{
-	res.render('addExpert');
+app.get('/addExpert', function (req, res, next) {
+    res.render('addExpert');
 });
 
 
@@ -194,58 +173,55 @@ app.get('/addExpert', function(req, res, next)
 // - repeat steps 9-12 as necessary - 
 // 12. have a beer or whatever your celebatory drink is 
 app.post('/addExpert', (req, res) => {
-	const { first_name, last_name, expert_email, expert_twitter, expert_github, expert_linkedin, classes, skills, organizations } = req.body;
+    const { first_name, last_name, expert_email, expert_twitter, expert_github, expert_linkedin, classes, skills, organizations } = req.body;
 
-	sqlStatement = "INSERT INTO Users (firstName, lastName, username, expert_twitter, expert_github, expert_linkedin, classes, skills, organizations) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [first_name, last_name, expert_email, expert_twitter, expert_github, expert_linkedin, classes, skills, organizations];
-	pool.query(sqlStatement, function (err, rows, fields) {
-		var sendData = JSON.stringify(rows);
-		res.send(sendData);
-	});
-	res.render('addExpert', {
-		message: 'Expert Added',
-		messageClass: 'alert-success'
-	});
+    sqlStatement = "INSERT INTO Users (firstName, lastName, username, expert_twitter, expert_github, expert_linkedin, classes, skills, organizations) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [first_name, last_name, expert_email, expert_twitter, expert_github, expert_linkedin, classes, skills, organizations];
+    pool.query(sqlStatement, function (err, rows, fields) {
+        var sendData = JSON.stringify(rows);
+        res.send(sendData);
+    });
+    res.render('addExpert', {
+        message: 'Expert Added',
+        messageClass: 'alert-success'
+    });
 });
 
-app.get('/advancedSearch', function(req, res, next)
-{
+app.get('/advancedSearch', function (req, res, next) {
     res.render('advancedSearch');
 });
 
-app.get('/basicProfile', function(req, res, next){
+app.get('/basicProfile', function (req, res, next) {
     var sqlStatement = "SELECT description FROM Subjects WHERE subject_id IN (SELECT subject_id FROM ExpertSubjects WHERE user_id = 1)";
-    pool.query(sqlStatement, function(err, result, fields)
-    {
-        
+    pool.query(sqlStatement, function (err, result, fields) {
+
         var userInfo = JSON.stringify(result);
         console.log(userInfo);
 
         var sqlStatement = "SELECT description FROM Classes WHERE class_id IN (SELECT class_id FROM ExpertClasses WHERE user_id = 1)";
-        pool.query(sqlStatement, function(err, result2, fields){
-            
+        pool.query(sqlStatement, function (err, result2, fields) {
+
             var userInfo = JSON.stringify(result2);
             console.log(userInfo)
-            
+
             res.render('basicProfile', {
                 result: result,
                 result2: result2
             });
         });
 
-        
+
     });
-    
+
 });
 
 
-app.get('/basicProfileModify', function(req, res, next)
-{
+app.get('/basicProfileModify', function (req, res, next) {
     res.render('basicProfileModify');
 });
 
-app.post('/basicProfileModify/addSkill',function(req,res){
+app.post('/basicProfileModify/addSkill', function (req, res) {
     console.log(req.body)
-    pool.query("INSERT INTO Subjects (description) VALUES (?)", req.body.skill, function(err, rows, fields){
+    pool.query("INSERT INTO Subjects (description) VALUES (?)", req.body.skill, function (err, rows, fields) {
         var sendData = JSON.stringify(rows);
         //res.send(sendData);
         var skillInsertId = null;
@@ -253,39 +229,34 @@ app.post('/basicProfileModify/addSkill',function(req,res){
 
         var sqlStatement = 'INSERT INTO ExpertSubjects (user_id, subject_id) VALUES (' + req.body.userId + ',' + skillInsertId + ')';
         console.log(sqlStatement);
-        pool.query(sqlStatement, function(err, rows, fields){});
+        pool.query(sqlStatement, function (err, rows, fields) { });
     });
 });
 
-app.post('/basicProfileModify/removeSkill',function(req,res){
-    pool.query("DELETE FROM ExpertSubjects WHERE user_id = ? AND subject_id = ?", [req.body.userID, req.body.skill] ,function(err, rows, fields){
+app.post('/basicProfileModify/removeSkill', function (req, res) {
+    pool.query("DELETE FROM ExpertSubjects WHERE user_id = ? AND subject_id = ?", [req.body.userID, req.body.skill], function (err, rows, fields) {
         var sendData = JSON.stringify(rows);
         res.send(sendData);
     });
 });
 
-app.get('/search01', function(req, res, next)
-{
+app.get('/search01', function (req, res, next) {
     res.render('layout');
 });
 
-app.get('/memberSearch', function(req, res, next)
-{
+app.get('/memberSearch', function (req, res, next) {
     res.render('memberSearch');
 });
 
-app.get('/search', function(req, res, next)
-{
+app.get('/search', function (req, res, next) {
     res.render('search');
 });
 
-app.get('/search01', function(req, res, next)
-{
+app.get('/search01', function (req, res, next) {
     res.render('search01');
 });
 
-app.get('/searchResult', function(req, res, next)
-{
+app.get('/searchResult', function (req, res, next) {
     res.render('searchResult');
 });
 
@@ -302,17 +273,15 @@ app.get('/addCourse', function(req, res, next)
         
 });
 */
-app.get('/searchSkill', function(req, res, next)
-{
-    
+app.get('/searchSkill', function (req, res, next) {
+
     var sqlStatement = "SELECT * FROM `Subjects` WHERE `description` = 'Python'";
-    pool.query(sqlStatement, function(err, result, fields)
-    {
+    pool.query(sqlStatement, function (err, result, fields) {
         var userInfo = JSON.stringify(result);
         console.log(userInfo);
         res.send(userInfo);
     });
-    
+
 
 });
 
@@ -327,6 +296,6 @@ app.use(function (err, req, res, next) {
     res.render('500');
 });
 
-app.listen(app.get('port'), function(){
-  console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
+app.listen(app.get('port'), function () {
+    console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
 });
