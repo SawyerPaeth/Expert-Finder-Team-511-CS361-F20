@@ -64,6 +64,7 @@ app.get('/login', function (req, res, next) {
 
 });
 
+
 app.post('/expertFinder', (req, res) => {
     const { email, password } = req.body;
     const hashedPassword = getHashedPassword(password);
@@ -87,7 +88,7 @@ app.post('/expertFinder', (req, res) => {
             res.cookie('AuthToken', authToken);
 
             // Redirect user to the protected page
-            //res.redirect('/protected');
+            res.redirect('/basicProfile');
 
         } else {
             res.render('expertFinder', {
@@ -191,7 +192,17 @@ app.get('/advancedSearch', function (req, res, next) {
 });
 
 app.get('/basicProfile', function (req, res, next) {
-    var sqlStatement = "SELECT description FROM Subjects WHERE subject_id IN (SELECT subject_id FROM ExpertSubjects WHERE user_id = 1)";
+    // Please don't delete this stuff yet - I'm trying out some 
+    // conditional rendering. 
+    let isLoggedOn;
+    isLoggedOn = false;
+    if(req.user) {
+        isLoggedOn = true;
+    };
+ //   var sqlStatement = "SELECT description FROM Subjects WHERE subject_id IN (SELECT subject_id FROM ExpertSubjects WHERE user_id = 1)";
+ // You can use the req.user to figure out what the currently logged in user's name is.
+    var sqlStatement = 'SELECT description FROM Subjects WHERE subject_id IN (SELECT subject_id FROM ExpertSubjects INNER JOIN Users WHERE ExpertSubjects.user_id = Users.user_id AND Users.username = "' + req.user + '")';
+    console.log(sqlStatement);
     pool.query(sqlStatement, function (err, result, fields) {
 
         var userInfo = JSON.stringify(result);
