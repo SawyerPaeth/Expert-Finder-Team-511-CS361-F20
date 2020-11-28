@@ -70,10 +70,10 @@ CREATE TABLE ExpertLinks
 
 
 INSERT INTO Users VALUES
-	(1, 'levinw', 'Will', 'Levin', 'HelloWorld'),
-	(2, 'wyborskv', 'Vincent', 'Wyborski', 'HelloWorld'),
-	(3, 'paethsa', 'Sawyer', 'Paeth', 'HelloWorld'),
-	(4, 'hallerc', 'Chris', 'Haller', 'HelloWorld');
+	(1, 'levinw@oregonstate.edu', 'Will', 'Levin', 'n4bQgYhMfWWaL+qgxVrQFaO/TxsrC4Is0V1sFbDwCgg='),
+	(2, 'wyborskv@oregonstate.edu', 'Vincent', 'Wyborski', 'n4bQgYhMfWWaL+qgxVrQFaO/TxsrC4Is0V1sFbDwCgg='),
+	(3, 'paethsa@oregonstate.edu', 'Sawyer', 'Paeth', 'n4bQgYhMfWWaL+qgxVrQFaO/TxsrC4Is0V1sFbDwCgg='),
+	(4, 'hallerc@oregonstate.edu', 'Chris', 'Haller', 'n4bQgYhMfWWaL+qgxVrQFaO/TxsrC4Is0V1sFbDwCgg=');
 
 INSERT INTO Subjects VALUES
 	(1, 'Web Development'),
