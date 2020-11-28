@@ -216,6 +216,7 @@ app.get('/basicProfile', function (req, res, next) {
             console.log(userInfo)
 
             res.render('basicProfile', {
+                isLoggedOn : isLoggedOn,
                 result: result,
                 result2: result2
             });
