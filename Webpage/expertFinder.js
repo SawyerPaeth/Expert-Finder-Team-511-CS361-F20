@@ -134,7 +134,8 @@ app.post('/register', (req, res, next) => {
                 };
             };
             const hashedPassword = getHashedPassword(password);
-            sqlStatement = 'INSERT INTO Users (username, firstname, lastname, password) VALUES (' + email + ', ' + firstName + ', ' + lastName + ', ' + hashedPassword + ')';
+            sqlStatement = 'INSERT INTO Users (username, firstname, lastname, password) VALUES ("' + email + '", "' + firstName + '", "' + lastName + '", "' + hashedPassword + '")';
+            console.log(sqlStatement);
             pool.query(sqlStatement, function (err, rows, field) {
                 res.render('expertFinder', {
                     message: 'Registration Complete. Please login to continue.',
