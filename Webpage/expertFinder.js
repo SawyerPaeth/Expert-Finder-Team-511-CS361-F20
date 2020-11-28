@@ -193,8 +193,8 @@ app.get('/advancedSearch', function (req, res, next) {
 });
 
 app.get('/basicProfile', function (req, res, next) {
-    // Please don't delete this stuff yet - I'm trying out some 
-    // conditional rendering. 
+    // So this is what I would recommend - have a passed in user, check for existance
+    // if it doesn't exist, user the logged in user. 
     let isLoggedOn;
     isLoggedOn = false;
     if(req.user) {
@@ -202,6 +202,7 @@ app.get('/basicProfile', function (req, res, next) {
     };
  //   var sqlStatement = "SELECT description FROM Subjects WHERE subject_id IN (SELECT subject_id FROM ExpertSubjects WHERE user_id = 1)";
  // You can use the req.user to figure out what the currently logged in user's name is.
+ // req.user is the email address of the logged in user (username)
     var sqlStatement = 'SELECT description FROM Subjects WHERE subject_id IN (SELECT subject_id FROM ExpertSubjects INNER JOIN Users WHERE ExpertSubjects.user_id = Users.user_id AND Users.username = "' + req.user + '")';
     console.log(sqlStatement);
     pool.query(sqlStatement, function (err, result, fields) {
