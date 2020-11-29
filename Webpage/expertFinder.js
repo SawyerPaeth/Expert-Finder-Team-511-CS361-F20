@@ -210,7 +210,7 @@ app.get('/basicProfile', function (req, res, next) {
         var userInfo = JSON.stringify(result);
         console.log(userInfo);
 
-        var sqlStatement = "SELECT description FROM Classes WHERE class_id IN (SELECT class_id FROM ExpertClasses WHERE user_id = 1)";
+        var sqlStatement = 'SELECT description FROM Classes WHERE class_id IN (SELECT class_id FROM ExpertClasses INNER JOIN Users WHERE ExpertClasses.user_id = Users.user_id AND Users.username = "' + req.user + '")';
         pool.query(sqlStatement, function (err, result2, fields) {
 
             var userInfo = JSON.stringify(result2);
