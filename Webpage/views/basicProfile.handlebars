@@ -1,6 +1,7 @@
 <div class = "container pt-5">
- 
-    <h1 class = "text-center">John Doe</h1>
+    {{#each Userinfo}}
+    <h1 class = "text-center">{{this.firstName}} {{this.lastName}}: {{this.username}}</h1>
+    {{/each}}
   </div>
 
   <div class = "container pt-5">
@@ -8,21 +9,19 @@
         <div class="col-sm-3"></div>
         <div class="col-sm-3 pt-4 border-top border-left border-success">
             <ul style="list-style-type:none;">
-                <h5 class="font-weight-bold"> skills: 
-                    
-                </h5>
-
-
-                    {{#each result}}
+                <h5 class="font-weight-bold"> Skills: </h5>
+                    {{#each Subjects}}
                     <li>{{this.description}}</li>
-                    {{/each}}
-                
+                    {{/each}}                    
             </ul>
         </div>
         <div class="col-sm-3 pt-4 border-top border-right border-success">
             <ul>
                 <h5 class="font-weight-bold"> Links: </h5>
                 <li>
+                    {{#each Links}}
+                        <a href="{{this.link}}""></a> 
+                    {{/each}}
                     <a href="https://github.com/SawyerPaeth/Expert-Finder-Team-511-CS361-F20">GitHub.com/John-Doe</a>
                 </li>
                 <li>
@@ -45,7 +44,7 @@
             <ul style="list-style-type:none;">
                 <h5 class="font-weight-bold"> Classes: </h5>
                     
-                    {{#each result2}}
+                    {{#each Classes}}
                     <li>{{this.description}}</li>
                     {{/each}}
             </ul>

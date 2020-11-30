@@ -197,35 +197,53 @@ app.get('/basicProfile', function (req, res, next) {
     // if it doesn't exist, user the logged in user. 
     let isLoggedOn;
     isLoggedOn = false;
-    if(req.user) {
+    if (req.user) {
         isLoggedOn = true;
+        sqlUser = req.user;
     };
- //   var sqlStatement = "SELECT description FROM Subjects WHERE subject_id IN (SELECT subject_id FROM ExpertSubjects WHERE user_id = 1)";
- // You can use the req.user to figure out what the currently logged in user's name is.
- // req.user is the email address of the logged in user (username)
-    var sqlStatement = 'SELECT description FROM Subjects WHERE subject_id IN (SELECT subject_id FROM ExpertSubjects INNER JOIN Users WHERE ExpertSubjects.user_id = Users.user_id AND Users.username = "' + req.user + '")';
-    console.log(sqlStatement);
-    pool.query(sqlStatement, function (err, result, fields) {
+    //   var sqlStatement = "SELECT description FROM Subjects WHERE subject_id IN (SELECT subject_id FROM ExpertSubjects WHERE user_id = 1)";
+    // You can use the req.user to figure out what the currently logged in user's name is.
+    // req.user is the email address of the logged in user (username)
 
-        var userInfo = JSON.stringify(result);
-        console.log(userInfo);
+    var UserSqlStatement = 'SELECT firstName, lastName, username FROM Users WHERE Users.username = "' + sqlUser + '"';
 
-        var sqlStatement = "SELECT description FROM Classes WHERE class_id IN (SELECT class_id FROM ExpertClasses WHERE user_id = 1)";
-        pool.query(sqlStatement, function (err, result2, fields) {
 
-            var userInfo = JSON.stringify(result2);
-            console.log(userInfo)
+    pool.query(UserSqlStatement, function (err, Userinfo, fields) {
 
-            res.render('basicProfile', {
-                isLoggedOn : isLoggedOn,
-                result: result,
-                result2: result2
+        var SubjectSqlStatement = 'SELECT description FROM Subjects LEFT JOIN ExpertSubjects ON ExpertSubjects.subject_id = Subjects.subject_id LEFT JOIN Users ON ExpertSubjects.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
+
+        var ClassSqlStatement = 'SELECT description FROM Classes LEFT JOIN ExpertClasses ON ExpertClasses.class_id = Classes.class_id LEFT JOIN Users ON ExpertClasses.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
+
+        var LinksSqlStatement = 'SELECT link, link_type FROM ExpertLinks LEFT JOIN Users ON ExpertLinks.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
+
+        pool.query(SubjectSqlStatement, function (err, Subjects, fields) {
+
+            var SubjectsString = JSON.stringify(Subjects);
+            console.log(SubjectsString);
+
+            var sqlStatement = "SELECT description FROM Classes WHERE class_id IN (SELECT class_id FROM ExpertClasses WHERE user_id = 1)";
+            pool.query(ClassSqlStatement, function (err, Classes, fields) {
+
+                var ClassesString = JSON.stringify(Classes);
+                console.log(ClassesString);
+
+                pool.query(LinksSqlStatement, function (err, Links, fields) {
+                    var LinksString = JSON.stringify(Links);
+                    console.log(LinksString);
+                    res.render('basicProfile', {
+                        isLoggedOn: isLoggedOn,
+                        Userinfo: Userinfo,
+                        Subjects: Subjects,
+                        Classes: Classes,
+                        Links : Links
+                    });
+
+                });
             });
+
+
         });
-
-
     });
-
 });
 
 
