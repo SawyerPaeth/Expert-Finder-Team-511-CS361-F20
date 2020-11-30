@@ -215,8 +215,9 @@ app.get('/basicProfile', function (req, res, next) {
         var ClassSqlStatement = 'SELECT description FROM Classes LEFT JOIN ExpertClasses ON ExpertClasses.class_id = Classes.class_id LEFT JOIN Users ON ExpertClasses.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
 
         var LinksSqlStatement = 'SELECT link, link_type FROM ExpertLinks LEFT JOIN Users ON ExpertLinks.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
-
-        pool.query(SubjectSqlStatement, function (err, Subjects, fields) {
+        
+        var sqlStatement = 'SELECT description FROM Classes WHERE class_id IN (SELECT class_id FROM ExpertClasses INNER JOIN Users WHERE ExpertClasses.user_id = Users.user_id AND Users.username = "' + req.user + '")';
+        pool.query(sqlStatement, function (err, result2, fields) {
 
             var SubjectsString = JSON.stringify(Subjects);
             console.log(SubjectsString);
