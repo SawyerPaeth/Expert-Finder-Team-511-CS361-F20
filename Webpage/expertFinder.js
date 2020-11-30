@@ -27,6 +27,7 @@ var pool = mysql.createPool({
 });
 
 const authTokens = {};
+const ExpertUser = {};
 
 app.use((req, res, next) => {
     // Get auth token from the cookies
@@ -195,18 +196,22 @@ app.get('/advancedSearch', function (req, res, next) {
 app.get('/basicProfile', function (req, res, next) {
     // So this is what I would recommend - have a passed in user, check for existance
     // if it doesn't exist, user the logged in user. 
+    console.log(req.query);
     let isLoggedOn;
     isLoggedOn = false;
     if (req.user) {
         isLoggedOn = true;
         sqlUser = req.user;
     };
+
+    if (req.query.ExpertUser) {
+        sqlUser = req.query.ExpertUser;
+    }
     //   var sqlStatement = "SELECT description FROM Subjects WHERE subject_id IN (SELECT subject_id FROM ExpertSubjects WHERE user_id = 1)";
     // You can use the req.user to figure out what the currently logged in user's name is.
     // req.user is the email address of the logged in user (username)
 
     var UserSqlStatement = 'SELECT firstName, lastName, username FROM Users WHERE Users.username = "' + sqlUser + '"';
-
 
     pool.query(UserSqlStatement, function (err, Userinfo, fields) {
 
@@ -215,14 +220,12 @@ app.get('/basicProfile', function (req, res, next) {
         var ClassSqlStatement = 'SELECT description FROM Classes LEFT JOIN ExpertClasses ON ExpertClasses.class_id = Classes.class_id LEFT JOIN Users ON ExpertClasses.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
 
         var LinksSqlStatement = 'SELECT link, link_type FROM ExpertLinks LEFT JOIN Users ON ExpertLinks.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
-        
-        var sqlStatement = 'SELECT description FROM Classes WHERE class_id IN (SELECT class_id FROM ExpertClasses INNER JOIN Users WHERE ExpertClasses.user_id = Users.user_id AND Users.username = "' + req.user + '")';
-        pool.query(sqlStatement, function (err, result2, fields) {
+
+        pool.query(SubjectSqlStatement, function (err, Subjects, fields) {
 
             var SubjectsString = JSON.stringify(Subjects);
             console.log(SubjectsString);
 
-            var sqlStatement = "SELECT description FROM Classes WHERE class_id IN (SELECT class_id FROM ExpertClasses WHERE user_id = 1)";
             pool.query(ClassSqlStatement, function (err, Classes, fields) {
 
                 var ClassesString = JSON.stringify(Classes);
