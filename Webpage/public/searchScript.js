@@ -1,10 +1,21 @@
 document.addEventListener('DOMContentLoaded', bindButtons);
 
 function bindButtons(){
-  document.getElementById('addSkillButton').addEventListener('click', function(event){
+  document.getElementById('searchNameButton').addEventListener('click', function(event){
+    console.log("search Pressed")
     var req = new XMLHttpRequest();
-    var skill = document.getElementById('searchSkillInput').value;
-    req.open('GET', '/?lastname=wyborski' ,true);
+    var payload = {searchType:"Name", searchTerm:null};
+    payload.searchTerm = document.getElementById('searchNameInput').value;
+
+    req.open('POST', '/search/search', true);
+    req.setRequestHeader('Content-Type', 'application/json');
+    req.addEventListener('load', function(){
+      if(req.status >= 200 && req.status < 400){
+        //DO STUFF HERE                   
+      }
+    });
+    req.send(JSON.stringify(payload));
+    event.preventDefault();  
   });
 }
       /*
@@ -65,6 +76,5 @@ function bindButtons(){
       req.send(JSON.stringify(payload));
       event.preventDefault();
     });
-      
-};
-*/
+*/      
+
