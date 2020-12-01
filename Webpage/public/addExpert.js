@@ -19,6 +19,7 @@ function submitButtons() {
     payload.organizations = document.getElementById('organizations').value;
 
     req.setRequestHeader('Content-Type', 'application/json');
-    req.send(JSON.stringify(payload));
+    console.log(req.send(JSON.stringify(payload)));
+
     event.preventDefault();
   })
