@@ -1,8 +1,10 @@
 DROP TABLE IF EXISTS ExpertClasses;
 DROP TABLE IF EXISTS ExpertSubjects;
 DROP TABLE IF EXISTS ExpertLinks;
+DROP TABLE IF EXISTS ExpertOrganizations;
 DROP TABLE IF EXISTS Subjects;
 DROP TABLE IF EXISTS Classes;
+DROP TABLE IF EXISTS Organizations;
 DROP TABLE IF EXISTS Users;
 
 CREATE TABLE Users
@@ -28,6 +30,28 @@ CREATE TABLE ExpertSubjects
 	CONSTRAINT PK_ExpertSubjects PRIMARY KEY (user_id, subject_id),
 		FOREIGN KEY (subject_id)
 			REFERENCES Subjects (subject_id)
+			ON UPDATE CASCADE
+			ON DELETE CASCADE,
+		FOREIGN KEY (user_id)
+			REFERENCES Users (user_id)
+			ON UPDATE CASCADE
+			ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+
+CREATE TABLE Organizations
+(
+	org_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	description VARCHAR(255) NOT NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE ExpertOrganizations
+(
+	user_id INT AUTO_INCREMENT NOT NULL,
+	org_id INT NOT NULL,
+	CONSTRAINT Pk_ExpertSubjects PRIMARY KEY (user_id, org_id),
+		FOREIGN KEY (org_id)
+			REFERENCES Organizations (org_id)
 			ON UPDATE CASCADE
 			ON DELETE CASCADE,
 		FOREIGN KEY (user_id)
@@ -104,4 +128,22 @@ INSERT INTO ExpertClasses VALUES
 	(1, 3),
 	(2, 1),
 	(3, 1),
+	(4, 1);
+
+INSERT INTO ExpertLinks VALUES
+	(1, "https://github.com/SawyerPaeth/Expert-Finder-Team-511-CS361-F20", "github"),
+	(1, "https://github.com/nawazu/cs340-project", "github");
+	
+INSERT INTO Organizations VALUES
+	(1, "IEEE"),
+	(2, "Free Masons"),
+	(3, "SWE");
+
+INSERT INTO ExpertOrganizations VALUES
+	(1, 1),
+	(1, 2),
+	(2, 3),
+	(2, 1),
+	(3, 3),
+	(3, 2),
 	(4, 1);
