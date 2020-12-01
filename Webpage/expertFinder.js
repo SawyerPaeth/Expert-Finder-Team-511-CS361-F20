@@ -185,7 +185,8 @@ app.post('/addExpert', (req, res, next) => {
     console.log(sqlStatement);
     var userid =null;
     pool.query(sqlStatement, function (err, rows, fields) {
-    	sqlStatement2 = 'SELECT * FROM Users';
+        // added the expert email - wrl
+    	sqlStatement2 = 'SELECT * FROM Users WHERE username ="' + expert_email + '"';
     	console.log(sqlStatement2);
     	pool.query(sqlStatement2, function (err, rows, field) { 
     		for (var x in rows) {
@@ -206,8 +207,13 @@ app.post('/addExpert', (req, res, next) => {
     				sqlStatement_linkedin = 'INSERT INTO ExpertLinks (user_id, link, link_type) VALUES ("' + userid + '","' + expert_linkedin + '","' + 'linkedin' + '")';
     				console.log(sqlStatement_linkedin);
     				pool.query(sqlStatement_linkedin, function(err, rows, fields) {
-
-    					sqlStatement_classes = 'SELECT * From Classes';
+                        // You should probably loop about classes in a for loop, pulling each
+                        // added class out and running from here down with each class.  Also not sure
+                        // you want to nest the links and this stuff like this - just because they don't
+                        // have links doesn't mean they won't have classes.   As long as it's all nested 
+                        // under the user it should be fine. 
+                        // Added a check for the description - WRL 
+    					sqlStatement_classes = 'SELECT * From Classes WHERE description = "' + classes + '"';
     					var classid = null;
     					pool.query(sqlStatement_classes, function(err, rows, fields) {
     						for (var x in rows) {
@@ -231,6 +237,7 @@ app.post('/addExpert', (req, res, next) => {
 
     						sql_expert_class = 'INSERT INTO ExpertClasses (user_id, class_id) VALUES ("' + userid + '","' + classid + '")';
     						pool.query(sql_expert_class, function(err, rows, fields) {
+                                // End the loop for classes - break out subjects into it's own area
 
     							sqlStatement_subjects = 'SELECT * From Subjects';
     							var subjectid = null;
