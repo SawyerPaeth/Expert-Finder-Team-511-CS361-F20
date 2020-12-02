@@ -232,14 +232,22 @@ app.get('/basicProfile', function (req, res, next) {
                 console.log(ClassesString);
 
                 pool.query(LinksSqlStatement, function (err, Links, fields) {
+                    
                     var LinksString = JSON.stringify(Links);
                     console.log(LinksString);
-                    res.render('basicProfile', {
-                        isLoggedOn: isLoggedOn,
-                        Userinfo: Userinfo,
-                        Subjects: Subjects,
-                        Classes: Classes,
-                        Links : Links
+                    
+                    pool.query(ClassSqlStatement, function (err, Organization, fields) {
+
+                        var OrganizationString = JSON.stringify(Organization);
+                        console.log(OrganizationString);
+                        res.render('basicProfile', {
+                            isLoggedOn: isLoggedOn,
+                            Userinfo: Userinfo,
+                            Subjects: Subjects,
+                            Classes: Classes,
+                            Links : Links,
+                            Organization : Organization
+                        });
                     });
                 });
             });
