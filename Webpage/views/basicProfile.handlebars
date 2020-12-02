@@ -20,7 +20,7 @@
                 <h5 class="font-weight-bold"> Links: </h5>
                 <li>
                     {{#each Links}}
-                        <a href="{{this.link}}""></a> 
+                        <a href="{{this.link}}"></a> 
                     {{/each}}
                     <a href="https://github.com/SawyerPaeth/Expert-Finder-Team-511-CS361-F20">GitHub.com/John-Doe</a>
                 </li>
@@ -52,8 +52,10 @@
         <div class="col-sm-3 border-bottom border-right border-success">
             <ul style="list-style-type:none;">
                 <h5 class="font-weight-bold"> Organization: </h5>
-                <li>Witness Protection Inc.
-                </li>
+                
+                {{#each Organization}
+                <li>{{this.description}}</li>
+                {{/each}}
                 
             </ul>
         </div>
