@@ -221,6 +221,8 @@ app.get('/basicProfile', function (req, res, next) {
 
         var LinksSqlStatement = 'SELECT link, link_type FROM ExpertLinks LEFT JOIN Users ON ExpertLinks.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
 
+        var OrganizationSqlStatement = 'SELECT organization FROM ExpertOrganization LEFT JOIN Users ON ExpertOrganization.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
+        
         pool.query(SubjectSqlStatement, function (err, Subjects, fields) {
 
             var SubjectsString = JSON.stringify(Subjects);
@@ -236,7 +238,7 @@ app.get('/basicProfile', function (req, res, next) {
                     var LinksString = JSON.stringify(Links);
                     console.log(LinksString);
                     
-                    pool.query(ClassSqlStatement, function (err, Organization, fields) {
+                    pool.query(OrganizationSqlStatement, function (err, Organization, fields) {
 
                         var OrganizationString = JSON.stringify(Organization);
                         console.log(OrganizationString);
