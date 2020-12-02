@@ -220,16 +220,8 @@ app.post('/addExpert', (req, res, next) => {
     							if (rows[x].description === classes) {
     								classid = rows[x].class_id;
     							}
-    							else {
-    								sql_class_add = 'INSERT INTO Classes (description) VALUES ("' + classes + '")';
-    								pool.query(sql_class_add, function(err, rows, fields) {
-
-    									pool.query(sqlStatement_classes, function(err, rows, fields) {
-    										for (var x in rows) {
-    											if (rows[x].description === classes) {
-    												classid = rows[x].class_id;
-    											};
-    										};
+    						};
+                            console.log(classid);
     									});
     								});
     							};
