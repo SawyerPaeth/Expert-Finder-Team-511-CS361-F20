@@ -185,7 +185,6 @@ app.post('/addExpert', (req, res, next) => {
     console.log(sqlStatement);
     var userid =null;
     pool.query(sqlStatement, function (err, rows, fields) {
-        // added the expert email - wrl
     	sqlStatement2 = 'SELECT * FROM Users WHERE username ="' + expert_email + '"';
     	console.log(sqlStatement2);
     	pool.query(sqlStatement2, function (err, rows, field) { 
@@ -200,108 +199,132 @@ app.post('/addExpert', (req, res, next) => {
     		console.log(sqlStatement_git);
     		pool.query(sqlStatement_git, function(err, rows, fields) {
 
-    			sqlStatement_twitter = 'INSERT INTO ExpertLinks (user_id, link, link_type) VALUES ("' + userid + '","' + expert_twitter + '","' + 'twitter' + '")';
-    			console.log(sqlStatement_twitter);
-    			pool.query(sqlStatement_twitter, function(err, rows, fields) {
+    		});
 
-    				sqlStatement_linkedin = 'INSERT INTO ExpertLinks (user_id, link, link_type) VALUES ("' + userid + '","' + expert_linkedin + '","' + 'linkedin' + '")';
-    				console.log(sqlStatement_linkedin);
-    				pool.query(sqlStatement_linkedin, function(err, rows, fields) {
-                        // You should probably loop about classes in a for loop, pulling each
-                        // added class out and running from here down with each class.  Also not sure
-                        // you want to nest the links and this stuff like this - just because they don't
-                        // have links doesn't mean they won't have classes.   As long as it's all nested 
-                        // under the user it should be fine. 
-                        // Added a check for the description - WRL 
-    					sqlStatement_classes = 'SELECT * From Classes WHERE description = "' + classes + '"';
-    					var classid = null;
-    					pool.query(sqlStatement_classes, function(err, rows, fields) {
-    						for (var x in rows) {
-    							if (rows[x].description === classes) {
-    								classid = rows[x].class_id;
-    							}
-    						};
-                            console.log(classid);
-    									});
-    								});
-    							};
-    						};
+    		sqlStatement_twitter = 'INSERT INTO ExpertLinks (user_id, link, link_type) VALUES ("' + userid + '","' + expert_twitter + '","' + 'twitter' + '")';
+    		console.log(sqlStatement_twitter);
+    		pool.query(sqlStatement_twitter, function(err, rows, fields) {
 
-    						sql_expert_class = 'INSERT INTO ExpertClasses (user_id, class_id) VALUES ("' + userid + '","' + classid + '")';
-    						pool.query(sql_expert_class, function(err, rows, fields) {
-                                // End the loop for classes - break out subjects into it's own area
+    		});
 
-    							sqlStatement_subjects = 'SELECT * From Subjects';
-    							var subjectid = null;
-    							pool.query(sqlStatement_subjects, function(err, rows, fields) {
-    								for (var x in rows) {
-    									if (rows[x].description === skills) {
-    										subjectid = rows[x].subject_id;
-    									}
-    									else {
-    										sql_subject_add = 'INSERT INTO Subjects (description) VALUES ("' + skills + '")';
-    										pool.query(sql_subject_add, function(err, rows, fields) {
+    		sqlStatement_linkedin = 'INSERT INTO ExpertLinks (user_id, link, link_type) VALUES ("' + userid + '","' + expert_linkedin + '","' + 'linkedin' + '")';
+    		console.log(sqlStatement_linkedin);
+    		pool.query(sqlStatement_linkedin, function(err, rows, fields) {
 
-    											pool.query(sqlStatement_subjects, function(err, rows, fields) {
-    												for (var x in rows) {
-    													if (rows[x].description === skills) {
-    														subjectid = rows[x].subject_id;
-    													};
-    												};
-    											});
-    										});
-    									};
-    								};
+    		});
+               
+    		sqlStatement_classes = 'SELECT * From Classes WHERE description = "' + classes + '"';
+    		var classid = null;
+    		pool.query(sqlStatement_classes, function(err, rows, fields) {
+    			for (var x in rows) {
+    				if (rows[x].description === classes) {
+    					classid = rows[x].class_id;
+    				};
+    			};
+                console.log(classid);
+                if (classid === null) {
+                	sql_class_add = 'INSERT INTO Classes (decription) VALUES ("' + classes + '")';
+                	pool.query(sql_class_add, function(err, rows, fields) {
+                		pool.query(sqlStatement_classes, function(err, rows, fields) {
+                			for (var x in rows) {
+                				if (rows[x].description === classes) {
+                					classid = rows[x].class_id;
+                				};
+                			};
+                		});
+                		conole.log(classid);
+                		sql_expert_class = 'INSERT INTO ExpertClasses (user_id, class_id) VALUES ("' + userid + '","' + classid + '")';
+    					pool.query(sql_expert_class, function(err, rows, fields) {
 
-    								sql_expert_subject = 'INSERT INTO ExpertSubjects (user_id, subject_id) VALUES ("' + userid + '","' + subjectid + '")';
-    								pool.query(sql_expert_subject, function(err, rows, fields) {
-    									res.render('addExpert', {
-        										message: 'Expert' + " " + first_name + " " + last_name + " " + 'added',
-        										messageClass: 'alert-success'
-        									});
-
-    									/*sqlStatement_orgs = 'SELECT * From Organizations';
-    									var orgid = null;
-    									pool.query(sqlStatement_orgs, function(err, rows, fields) {
-    										for (var x in rows) {
-    											if (rows[x].description === organizations) {
-    												orgid = rows[x].organization_id;
-    											}
-    											else {
-    												sql_org_add = 'INSERT INTO Organziations (description) VALUES ("' + organizations + '")';
-    												pool.query(sql_org_add, function(err, row, field) {
-
-    													pool.query(sqlStatement_orgs, function(err, rows, fields) {
-    														for (var x in rows) {
-    															if (rows[x].description === organizations) {
-    																orgid = rows[x].organization_id;
-    															};
-    														};
-    													});
-    												});
-    											};
-    										};
-
-    										sql_expert_class = 'INSERT INTO ExpertOrganizations (user_id, organization_id) VALUES ("' + userid + '","' + orgid + '")';
-    										pool.query(sql_expert_class, function(err, rows, fields) {
-    											res.render('addExpert', {
-        										message: 'Expert' + " " + first_name + " " + last_name + " " + 'added',
-        										messageClass: 'alert-success'
-        										});
-    										});
-    									});*/
-
-    								});
-    							});
     						});
-    					});
+                	});
+                };
+                else {
+                	sql_expert_class = 'INSERT INTO ExpertClasses (user_id, class_id) VALUES ("' + userid + '","' + classid + '")';
+    				pool.query(sql_expert_class, function(err, rows, fields) {
+
     				});
-        
-    			});
+    			};
+    		});
+    		
+    		sqlStatement_subjects = 'SELECT * From Subjects WHERE description = "' + skills + '"';
+    		var subjectid = null;
+    		pool.query(sqlStatement_subjects, function(err, rows, fields) {
+    			for (var x in rows) {
+    				if (rows[x].description === skills) {
+    					subjectid = rows[x].subject_id;
+    				};
+    			};
+                console.log(subjectid);
+                if (subjectid === null) {
+                	sql_subject_add = 'INSERT INTO Subjects (decription) VALUES ("' + skills + '")';
+                	pool.query(sql_subject_add, function(err, rows, fields) {
+                		pool.query(sqlStatement_subjects, function(err, rows, fields) {
+                			for (var x in rows) {
+                				if (rows[x].description === skills) {
+                					subjectid = rows[x].subject_id;
+                				};
+                			};
+
+                			conole.log(subjectid);
+                			sql_expert_subject = 'INSERT INTO ExpertSubjects (user_id, subject_id) VALUES ("' + userid + '","' + subjectid + '")';
+    						pool.query(sql_expert_subject, function(err, rows, fields) {
+
+    						});
+                		});
+                	});
+                };
+                else {
+                	sql_expert_subject = 'INSERT INTO ExpertSubjects (user_id, subject_id) VALUES ("' + userid + '","' + subjectid + '")';
+    				pool.query(sql_expert_subject, function(err, rows, fields) {
+
+    				});
+    			};
+    		});
+    		sqlStatement_organizations = 'SELECT * From Organizations WHERE description = "' + organizations + '"';
+    		var orgid = null;
+    		pool.query(sqlStatement_organizations, function(err, rows, fields) {
+    			for (var x in rows) {
+    				if (rows[x].description === organizations) {
+    					orgid = rows[x].organizations_id;
+    				};
+    			};
+                console.log(orgid);
+                if (orgid === null) {
+                	sql_organization_add = 'INSERT INTO Organizations (decription) VALUES ("' + organizations + '")';
+                	pool.query(sql_organization_add, function(err, rows, fields) {
+                		pool.query(sqlStatement_organizations, function(err, rows, fields) {
+                			for (var x in rows) {
+                				if (rows[x].description === organizations) {
+                					orgid = rows[x].organizations_id;
+                				};
+                			};
+
+                			conole.log(orgid);
+                			sql_expert_organizations = 'INSERT INTO ExpertOrganizations (user_id, organizations_id) VALUES ("' + userid + '","' + orgid + '")';
+    						pool.query(sql_expert_organizations, function(err, rows, fields) {
+    							res.render('addExpert', {
+        							message: 'Expert' + " " + first_name + " " + last_name + " " + 'added',
+        							messageClass: 'alert-success'
+        						});
+    						});
+                		});
+                	});
+                };
+                else {
+                	sql_expert_organizations = 'INSERT INTO ExpertOrganizations (user_id, organizations_id) VALUES ("' + userid + '","' + orgid + '")';
+    				pool.query(sql_expert_organizations, function(err, rows, fields) {
+    					res.render('addExpert', {
+        					message: 'Expert' + " " + first_name + " " + last_name + " " + 'added',
+        					messageClass: 'alert-success'
+        				});
+    				});
+    			};
     		});
     	});
 	});
 });
+
 
 app.get('/advancedSearch', function (req, res, next) {
     res.render('advancedSearch');
