@@ -4,18 +4,39 @@ function bindButtons(){
   document.getElementById('searchNameButton').addEventListener('click', function(event){
     console.log("search Pressed")
     var req = new XMLHttpRequest();
+    /*
     var payload = {searchType:"Name", searchTerm:null};
     payload.searchTerm = document.getElementById('searchNameInput').value;
+
+
 
     req.open('POST', '/search/search', true);
     req.setRequestHeader('Content-Type', 'application/json');
     req.addEventListener('load', function(){
       if(req.status >= 200 && req.status < 400){
-        //DO STUFF HERE                   
+        //DO STUFF HERE   
+        window.location = req.responseURL;               
       }
     });
     req.send(JSON.stringify(payload));
     event.preventDefault();  
+  });
+  */
+    var payload = {searchType:"Name", searchTerm:null};
+    payload.searchTerm = document.getElementById('searchNameInput').value;
+    req.open('GET','/searchResult?searchType=' + payload.searchType + '&searchTerm=' + payload.searchTerm ,true)
+    req.addEventListener('load', function(){
+      if(req.status >= 200 && req.status < 400){
+        //DO STUFF HERE                
+        //console.log(JSON.parse(req.responseText));
+        //var weather = JSON.parse(req.responseText)
+        console.log("here");
+        window.location.href = req.responseURL;
+      };
+    });
+    req.send(null);
+    event.preventDefault(); 
+
   });
 }
       /*
