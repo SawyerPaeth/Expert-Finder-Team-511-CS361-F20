@@ -1,6 +1,7 @@
 var express = require('express');
 var mysql = require("mysql");
 var bodyParser = require('body-parser');
+var util = require('util');
 
 var app = express();
 // This tells you the main.handlebars is the default layout
@@ -25,6 +26,11 @@ var pool = mysql.createPool({
     password: '8352',
     database: 'cs361_levinw'
 });
+
+pool.query = util.promisify(pool.query).bind(pool);
+
+
+module.exports = pool;
 
 const authTokens = {};
 const ExpertUser = {};
@@ -289,154 +295,238 @@ app.get('/search01', function (req, res, next) {
     res.render('search01');
 });
 
-app.get('/searchResult', function (req, res, next) {
+function wait(promise1, promise2, promise3, promise4) {
+    var done = 0;
+    var result = null;
+    promise1.then(
+        // on value
+        function (value) {
+            done += 1;
+            result1 = value;
+            return (value);
+        },
+        // on exception
+        function (reason) {
+            done += 1;
+            throw reason;
+        }
+    );
+
+    promise2.then(
+        // on value
+        function (value) {
+            done += 1;
+            result2 = value;
+            return (value);
+        },
+        // on exception
+        function (reason) {
+            done += 1;
+            throw reason;
+        }
+    );
+
+    promise3.then(
+        // on value
+        function (value) {
+            done += 1;
+            result3 = value;
+            return (value);
+        },
+        // on exception
+        function (reason) {
+            done += 1;
+            throw reason;
+        }
+    );
+
+    promise4.then(
+        // on value
+        function (value) {
+            done += 1;
+            result4 = value;
+            return (value);
+        },
+        // on exception
+        function (reason) {
+            done += 1;
+            throw reason;
+        }
+    );
+
+    while (done < 4)
+        require('deasync').runLoopOnce();
+
+    return [result1, result2, result3, result4];
+}
+
+app.get('/searchResult', async function (req, res, next) {
+
+    console.log(req.query);
+
+    async function UserQuery(sqlUser){
+        var UserSqlStatement = 'SELECT firstName, lastName, username FROM Users WHERE Users.user_id = ' + sqlUser;
+        console.log(UserSqlStatement)
+        Userinfo = pool.query(UserSqlStatement);
+        return Userinfo;
+    }
+
+    async function SubjectQuery(sqlUser){
+        var SubjectSqlStatement = 'SELECT description FROM Subjects WHERE subject_id IN (SELECT subject_id FROM ExpertSubjects WHERE user_id = ' + sqlUser + ')';
+        console.log(SubjectSqlStatement)
+        Userinfo = pool.query(SubjectSqlStatement);
+        return Userinfo;
+    }
+
+    async function ClassQuery(sqlUser){
+        var ClassSqlStatement = 'SELECT description FROM Classes WHERE class_id IN (SELECT class_id FROM ExpertClasses WHERE user_id = ' + sqlUser + ')';
+        console.log(ClassSqlStatement)
+        Userinfo = pool.query(ClassSqlStatement);
+        return Userinfo;
+    }
+
+    async function LinksQuery(sqlUser){
+        var LinksSqlStatement = 'SELECT link, link_type FROM ExpertLinks WHERE user_id = ' + sqlUser;
+        console.log(LinksSqlStatement)
+        Userinfo = pool.query(LinksSqlStatement);
+        return Userinfo;
+    }
+
     
-    console.log('KARI THINKS IM DOING MY SQL TWICE');
     if(req.query.searchType === 'Name'){
-        //console.log(req.query.searchType);
-        var context = [];
+        var context = {};
         var searchTermFormatted = "%" + req.query.searchTerm + "%";
-        //irstName LIKE ? OR lastname LIKE ?"
-        pool.query("SELECT * FROM Users WHERE firstName LIKE ?", searchTermFormatted, function (err, rows, fields) {
-            //var sendData = JSON.stringify(rows);
+        pool.query("SELECT user_id FROM Users WHERE firstName LIKE ? OR lastName LIKE ?", searchTermFormatted, function (err, rows, fields) {
             var tasks = 0;
             for(var x in rows){ tasks++};
-            //console.log(tasks);
-            //console.log(err);
-            //console.log(rows);
-            
             function taskComplete(){
                 tasks--;
                 if(tasks <= 0){
-                    console.log("ARRAY LENGTH");
-                    console.log(context.length);
-                    console.log(JSON.stringify(context));
                     res.render('searchResult', context);
-                    //res.redirect(301,'/searchResult');
                 }
             }
-            
             for(var x in rows){
-                sqlUser = rows[x].username;
-                var UserSqlStatement = 'SELECT firstName, lastName, username FROM Users WHERE Users.username = "' + sqlUser + '"';
-                pool.query(UserSqlStatement, function (err, Userinfo, fields) {
+                sqlUser = rows[x].user_id;
+                console.log("SQL USER")
+                console.log(sqlUser);
 
-                    var SubjectSqlStatement = 'SELECT description FROM Subjects LEFT JOIN ExpertSubjects ON ExpertSubjects.subject_id = Subjects.subject_id LEFT JOIN Users ON ExpertSubjects.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
+                var Userinfo = wait(UserQuery(sqlUser),SubjectQuery(sqlUser),ClassQuery(sqlUser),LinksQuery(sqlUser))
 
-                    var ClassSqlStatement = 'SELECT description FROM Classes LEFT JOIN ExpertClasses ON ExpertClasses.class_id = Classes.class_id LEFT JOIN Users ON ExpertClasses.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
+                console.log(Userinfo)
 
-                    var LinksSqlStatement = 'SELECT link, link_type FROM ExpertLinks LEFT JOIN Users ON ExpertLinks.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
+                context[sqlUser] = {
+                    Userinfo: Userinfo[0],
+                    Subjects: Userinfo[1],
+                    Classes: Userinfo[2],
+                    Links : Userinfo[3]
+                };
 
-                    pool.query(SubjectSqlStatement, function (err, Subjects, fields) {
-
-                        var SubjectsString = JSON.stringify(Subjects);
-                        //console.log(SubjectsString);
-
-                        pool.query(ClassSqlStatement, function (err, Classes, fields) {
-
-                            var ClassesString = JSON.stringify(Classes);
-                            //console.log(ClassesString);
-
-                            pool.query(LinksSqlStatement, function (err, Links, fields) {
-                                var LinksString = JSON.stringify(Links);
-                                //console.log(LinksString);
-                                context.push({
-                                    Userinfo: Userinfo,
-                                    Subjects: Subjects,
-                                    Classes: Classes,
-                                    Links : Links
-                                });
-                                taskComplete();
-                                //console.log("scope1");
-                                //console.log(context);
-                            });
-                            //console.log("scope2");
-                            //console.log(context);
-                        });
-                    });
-                });
-            }
-            //console.log("scope3");
-            //console.log(context); 
-        });
-        //console.log("scope4");
-        //console.log(context); 
-    };
-    //res.render('searchResult');
-});
-
-/*app.post('/search/search', function (req, res) {
-    //console.log(req.body)
-    var context = [];
-    var searchTermFormatted = "%" + req.body.searchTerm + "%";
-    //irstName LIKE ? OR lastname LIKE ?"
-    pool.query("SELECT * FROM Users WHERE firstName LIKE ?", searchTermFormatted, function (err, rows, fields) {
-        var sendData = JSON.stringify(rows);
-        var tasks = 0;
-        //res.redirect(301,'/searchResult');
-        for(var x in rows){ tasks++}
-        //console.log(size);
-        //res.send(sendData);
-        //console.log(err);
-        //console.log(rows);
-        
-        function taskComplete(){
-            tasks--;
-            if(tasks <= 0){
                 console.log(context);
-                res.render('searchResult', context);
-                //res.redirect(301,'/searchResult');
+
             }
-        }
-        
-        for(var x in rows){
-            sqlUser = rows[x].username;
-            var UserSqlStatement = 'SELECT firstName, lastName, username FROM Users WHERE Users.username = "' + sqlUser + '"';
-            pool.query(UserSqlStatement, function (err, Userinfo, fields) {
+            res.render('searchResult', context);
+        });
+    }else if(req.query.searchType === 'Class'){
+        var context = {};
+        var searchTermFormatted = "%" + req.query.searchTerm + "%";
+        pool.query("SELECT user_id FROM ExpertClasses WHERE class_id = (SELECT class_id FROM Classes WHERE description LIKE ?)", searchTermFormatted, function (err, rows, fields) {
+            var tasks = 0;
+            for(var x in rows){ tasks++};
+            function taskComplete(){
+                tasks--;
+                if(tasks <= 0){
+                    res.render('searchResult', context);
+                }
+            }
+            for(var x in rows){
+                sqlUser = rows[x].user_id;
+                console.log("SQL USER")
+                console.log(sqlUser);
 
-                var SubjectSqlStatement = 'SELECT description FROM Subjects LEFT JOIN ExpertSubjects ON ExpertSubjects.subject_id = Subjects.subject_id LEFT JOIN Users ON ExpertSubjects.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
+                var Userinfo = wait(UserQuery(sqlUser),SubjectQuery(sqlUser),ClassQuery(sqlUser),LinksQuery(sqlUser))
 
-                var ClassSqlStatement = 'SELECT description FROM Classes LEFT JOIN ExpertClasses ON ExpertClasses.class_id = Classes.class_id LEFT JOIN Users ON ExpertClasses.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
+                console.log(Userinfo)
 
-                var LinksSqlStatement = 'SELECT link, link_type FROM ExpertLinks LEFT JOIN Users ON ExpertLinks.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
+                context[sqlUser] = {
+                    Userinfo: Userinfo[0],
+                    Subjects: Userinfo[1],
+                    Classes: Userinfo[2],
+                    Links : Userinfo[3]
+                };
 
-                pool.query(SubjectSqlStatement, function (err, Subjects, fields) {
+                console.log(context);
 
-                    var SubjectsString = JSON.stringify(Subjects);
-                    //console.log(SubjectsString);
+            }
+            res.render('searchResult', context);
+        });
+    }else if(req.query.searchType === 'Subject'){
+        var context = {};
+        var searchTermFormatted = "%" + req.query.searchTerm + "%";
+        pool.query("SELECT user_id FROM ExpertSubjects WHERE subject_id IN (SELECT subject_id FROM Subjects WHERE description LIKE ?)", searchTermFormatted, function (err, rows, fields) {
+            var tasks = 0;
+            for(var x in rows){ tasks++};
+            function taskComplete(){
+                tasks--;
+                if(tasks <= 0){
+                    res.render('searchResult', context);
+                }
+            }
+            for(var x in rows){
+                sqlUser = rows[x].user_id;
+                console.log("SQL USER")
+                console.log(sqlUser);
 
-                    pool.query(ClassSqlStatement, function (err, Classes, fields) {
+                var Userinfo = wait(UserQuery(sqlUser),SubjectQuery(sqlUser),ClassQuery(sqlUser),LinksQuery(sqlUser))
 
-                        var ClassesString = JSON.stringify(Classes);
-                        //console.log(ClassesString);
+                console.log(Userinfo)
 
-                        pool.query(LinksSqlStatement, function (err, Links, fields) {
-                            var LinksString = JSON.stringify(Links);
-                            //console.log(LinksString);
-                            context.push({
-                                Userinfo: Userinfo,
-                                Subjects: Subjects,
-                                Classes: Classes,
-                                Links : Links
-                            });
-                            taskComplete();
-                            //console.log("scope1");
-                            //console.log(context);
-                        });
-                        //console.log("scope2");
-                        //console.log(context);
-                    });
-                });
-            });
-        }
-        //console.log("scope3");
-        //console.log(context); 
-    });
-    //console.log("scope4");
-    //console.log(context); 
+                context[sqlUser] = {
+                    Userinfo: Userinfo[0],
+                    Subjects: Userinfo[1],
+                    Classes: Userinfo[2],
+                    Links : Userinfo[3]
+                };
 
+                console.log(context);
+
+            }
+            res.render('searchResult', context);
+        });
+    }else if(req.query.searchType === 'Organization'){
+        var context = {};
+        var searchTermFormatted = "%" + req.query.searchTerm + "%";
+        pool.query("SELECT user_id FROM ExpertOrganizations WHERE org_id IN (SELECT org_id FROM Organizations WHERE description LIKE ?)", searchTermFormatted, function (err, rows, fields) {
+            var tasks = 0;
+            for(var x in rows){ tasks++};
+            function taskComplete(){
+                tasks--;
+                if(tasks <= 0){
+                    res.render('searchResult', context);
+                }
+            }
+            for(var x in rows){
+                sqlUser = rows[x].user_id;
+                console.log("SQL USER")
+                console.log(sqlUser);
+
+                var Userinfo = wait(UserQuery(sqlUser),SubjectQuery(sqlUser),ClassQuery(sqlUser),LinksQuery(sqlUser))
+
+                console.log(Userinfo)
+
+                context[sqlUser] = {
+                    Userinfo: Userinfo[0],
+                    Subjects: Userinfo[1],
+                    Classes: Userinfo[2],
+                    Links : Userinfo[3]
+                };
+
+                console.log(context);
+
+            }
+            res.render('searchResult', context);
+        });
+    }
 });
-*/
 
 /*
 app.get('/addCourse', function(req, res, next)

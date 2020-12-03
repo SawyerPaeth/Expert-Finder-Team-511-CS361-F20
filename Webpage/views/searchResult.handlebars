@@ -1,5 +1,9 @@
+{{#each context}}
+<h1>THRE IS THE NUMBER</h1>
+{{/each}}
+
 <section class="jumbotron text-left">
-    <h3> Search Results for: CS 361 </h3>
+    <h3> Search Results </h3>
     <dl class="col">
         {{#each this}}
             <dt class = "col-2"><a href="./basic_profile.html">{{#each Userinfo}}{{this.firstName}} {{this.lastName}}{{/each}}</a></dt>
@@ -20,83 +24,4 @@
             </dd>
         {{/each}}
     </dd>
-</section>
-    
-
-
-<section class="jumbotron text-left">
-    <h3> Search Results for: CS 361 </h3>
-    <dl class="col">
-        <dt class = "col-2"><a href="./basic_profile.html">John Doe</a></dt>
-        <dd class = "col-10">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm">
-                    Classes:  CS 290, CS 162, CS 454, <span style="background-color: yellow">CS 361</span>
-                </div>
-                <div class="col-sm">
-                Skills:  Python, Agile, C#, C++
-                </div>
-                <div class="col-sm">
-                Organization: Witness Protection Inc.
-                </div>
-            </div>
-        </div>
-        </dd>
-        <dt class = "col-2">Ed Ray</dt>
-        <dd class = "col-10">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm">
-                    Classes:  <span style="background-color: yellow">CS 361</span>, MTH 251, ME 151
-                </div>
-                <div class="col-sm">
-                Skills:  C#, C++
-                </div>
-                <div class="col-sm">
-                Organization: Retired
-                </div>
-            </div>
-        </div>
-        </dd>
-        <dt class = "col-2">Brandon Cooks</dt>
-        <dd class = "col-10">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm">
-                Classes:  BA 112, PE 523, PE 487, <span style="background-color: yellow">CS 361</span>
-                </div>
-                <div class="col-sm">
-                Skills:  JavaScript, Agile, Boost+
-                </div>
-                <div class="col-sm">
-                Organization: NFL
-                </div>
-            </div>
-        </div>
-    </dd>
-    <dt class = "col-2">Chad "Ocho-Cinco" Johnson</dt>
-        <dd class = "col-10">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm">
-                Classes:  Study Hall,  <span style="background-color: yellow">CS 361</span>, BMF 101
-                </div>
-                <div class="col-sm">
-                Skills:  Discord, Sales, Networking
-                </div>
-                <div class="col-sm">
-                Organization: Retired/Entrepreneur
-                </div>
-            </div>
-        </div>
-    </dd>
-</section>
-
-<section>
-    <div class="row justify-content-center">
-        <div class="col=md-6">
-            Looking for more options? Try <a href="./advancedSearch.html">Advanced Search</a> or <a href="./memberSearch">Member Search</a>
-        </div>
-    </div>
 </section>

@@ -1,65 +1,59 @@
-    <section class="jumbotron text-center">
-        <h1> Search for an Expert</h1>
-        <h4> Search by skill, course,<br>organization or name </h4>
-        <br>
-    <div class="row justify-content-center">
-        <div class="col=md-12">
-            <form class="form-horizontal"> 
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </div>
+<section class="jumbotron text-center">
+    <h1> Search By Class</h1>
+    <h4> Enter Class Name </h4>
+    <br>
+<div class="row justify-content-center">
+    <div class="col=md-12">
+        <form class="form-horizontal" action="/searchResult" method="get"> 
+          <label for="SearchTerm"></label>
+          <input type="text" id="searchTerm" name="searchTerm" placeholder="Name"><br><br>
+          <input type="hidden" id="searchType" name="searchType" value="Class"><br><br>
+        </form>
     </div>
-    </section>
+</div>
+</section>
 
-    <section class="jumbotron text-center">
-        <h1> Advanced Search for an Expert</h1>
-        <br>
-    <div class="row justify-content-center">
-        <div class="col=md-6">
-                <a id="dropdownLabel01" class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Search Category</a>
-                <div class="dropdown-menu" aria-labelledby="dropdown01">
-                    <button class="dropdown-item" onClick="searchDropdownLabel('Skill')">Skill</button>
-                    <button class="dropdown-item" onClick="searchDropdownLabel('Organization')">Organization</button>
-                    <button class="dropdown-item" onClick="searchDropdownLabel('Course')">Course</button>
-                </div>
-        </div>
-        <div class="col=md-6">
-            <form class="form-horizontal"> 
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </div>
+<section class="jumbotron text-center">
+    <h1> Search By Expert Skill</h1>
+    <h4> Enter Skill Name </h4>
+    <br>
+<div class="row justify-content-center">
+    <div class="col=md-12">
+        <form class="form-horizontal" action="/searchResult" method="get"> 
+          <label for="SearchTerm"></label>
+          <input type="text" id="searchTerm" name="searchTerm" placeholder="Name"><br><br>
+          <input type="hidden" id="searchType" name="searchType" value="Subject"><br><br>
+        </form>
     </div>
-    </section>
+</div>
+</section>
 
-    <section class="jumbotron text-center">
-        <h1> Already know your Expert?</h1>
-        <h4> Enter expert's name </h4>
-        <br>
-    <div class="row justify-content-center">
-        <div class="col=md-12">
-            <form class="form-horizontal"> 
-                <input id="searchNameInput" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button id="searchNameButton" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </div>
+<section class="jumbotron text-center">
+    <h1> Search By Expert Organization</h1>
+    <h4> Enter Organization Name </h4>
+    <br>
+<div class="row justify-content-center">
+    <div class="col=md-12">
+        <form class="form-horizontal" action="/searchResult" method="get"> 
+          <label for="SearchTerm"></label>
+          <input type="text" id="searchTerm" name="searchTerm" placeholder="Name"><br><br>
+          <input type="hidden" id="searchType" name="searchType" value="Organization"><br><br>
+        </form>
     </div>
-    </section>
+</div>
+</section>
 
-    <section class="jumbotron text-center">
-        <h1> GET TEST</h1>
-        <h4> Enter expert's name </h4>
-        <br>
-    <div class="row justify-content-center">
-        <div class="col=md-12">
-            <form class="form-horizontal" action="/searchResult" method="get"> 
-              <label for="SearchTerm">Search</label>
-              <input type="text" id="searchTerm" name="searchTerm"><br><br>
-              <input type="hidden" id="searchType" name="searchType" value="Name"><br><br>
-            </form>
-        </div>
+<section class="jumbotron text-center">
+    <h1> Already know your Expert?</h1>
+    <h4> Enter expert's name </h4>
+    <br>
+<div class="row justify-content-center">
+    <div class="col=md-12">
+        <form class="form-horizontal" action="/searchResult" method="get"> 
+          <label for="SearchTerm"></label>
+          <input type="text" id="searchTerm" name="searchTerm" placeholder="Name"><br><br>
+          <input type="hidden" id="searchType" name="searchType" value="Name"><br><br>
+        </form>
     </div>
-    </section>
-
-    <script src="dropdownScript.js"></script>
+</div>
+</section>
