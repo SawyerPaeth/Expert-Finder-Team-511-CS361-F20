@@ -197,14 +197,17 @@ app.get('/basicProfile', function (req, res, next) {
     // So this is what I would recommend - have a passed in user, check for existance
     // if it doesn't exist, user the logged in user. 
     console.log(req.query);
+
     let isLoggedOn;
     isLoggedOn = false;
     if (req.user) {
+        console.log(req.user);
         isLoggedOn = true;
         sqlUser = req.user;
     };
 
     if (req.query.ExpertUser) {
+        console.log(req.query.ExpertUser);
         sqlUser = req.query.ExpertUser;
     }
     //   var sqlStatement = "SELECT description FROM Subjects WHERE subject_id IN (SELECT subject_id FROM ExpertSubjects WHERE user_id = 1)";
