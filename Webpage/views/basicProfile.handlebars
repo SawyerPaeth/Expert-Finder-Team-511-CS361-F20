@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-sm-3"></div>
         <div class="col-sm-3 pt-4 border-top border-left border-success">
-            <ul style="list-style-type:none;">
+            <ul>
                 <h5 class="font-weight-bold"> Skills: </h5>
                     {{#each Subjects}}
                     <li>{{this.description}}</li>
@@ -18,12 +18,13 @@
         <div class="col-sm-3 pt-4 border-top border-right border-success">
             <ul>
                 <h5 class="font-weight-bold"> Links: </h5>
-                <li>
-                    {{#each Links}}
-                        <a href="{{this.link}}">{{this.link}}</a> 
-                    {{/each}}
+                
                     
-                </li>
+                    {{#each Links}}
+                    <li>
+                        <a href="{{this.link}}">{{this.link}}</a> 
+                    </li>
+                    {{/each}}
                 
                 
             </ul>
@@ -36,7 +37,7 @@
     <div class="row">
         <div class="col-sm-3"></div>
         <div class="col-sm-3 border-bottom border-left border-success">
-            <ul style="list-style-type:none;">
+            <ul>
                 <h5 class="font-weight-bold"> Classes: </h5>
                     
                     {{#each Classes}}
@@ -45,8 +46,8 @@
             </ul>
         </div>
         <div class="col-sm-3 border-bottom border-right border-success">
-            <ul style="list-style-type:none;">
-                <h5 class="font-weight-bold"> Organization: </h5>
+            <ul>
+                <h5 class="font-weight-bold"> Organizations: </h5>
                 
                     {{#each Organizations}}
                     <li>{{this.description}}</li>
