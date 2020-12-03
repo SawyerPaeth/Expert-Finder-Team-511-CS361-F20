@@ -241,17 +241,17 @@ app.get('/basicProfile', function (req, res, next) {
                     var LinksString = JSON.stringify(Links);
                     console.log(LinksString);
                     
-                    pool.query(OrganizationSqlStatement, function (err, Organization, fields) {
+                    pool.query(OrganizationSqlStatement, function (err, Organizations, fields) {
 
-                        var OrganizationString = JSON.stringify(Organization);
-                        console.log(OrganizationString);
+                        var OrganizationsString = JSON.stringify(Organizations);
+                        console.log(OrganizationsString);
                         res.render('basicProfile', {
                             isLoggedOn: isLoggedOn,
                             Userinfo: Userinfo,
                             Subjects: Subjects,
                             Classes: Classes,
                             Links : Links,
-                            Organization : Organization
+                            Organizations : Organizations
                         });
                     });
                 });
