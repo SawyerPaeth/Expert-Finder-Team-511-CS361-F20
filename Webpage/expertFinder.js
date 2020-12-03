@@ -251,7 +251,7 @@ app.get('/basicProfile', function (req, res, next) {
                             Subjects: Subjects,
                             Classes: Classes,
                             Links : Links,
-                            Organization : Organization
+                            //Organization : Organization
                         });
                     });
                 });
