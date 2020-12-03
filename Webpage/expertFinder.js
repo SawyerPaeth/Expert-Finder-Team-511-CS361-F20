@@ -303,90 +303,16 @@ app.get('/search01', function (req, res, next) {
 });
 
 app.get('/searchResult', function (req, res, next) {
-    
-    console.log('KARI THINKS IM DOING MY SQL TWICE');
-    if(req.query.searchType === 'Name'){
-        //console.log(req.query.searchType);
-        var context = [];
-        var searchTermFormatted = "%" + req.query.searchTerm + "%";
-        //irstName LIKE ? OR lastname LIKE ?"
-        pool.query("SELECT * FROM Users WHERE firstName LIKE ?", searchTermFormatted, function (err, rows, fields) {
-            //var sendData = JSON.stringify(rows);
-            var tasks = 0;
-            for(var x in rows){ tasks++};
-            //console.log(tasks);
-            //console.log(err);
-            //console.log(rows);
-            
-            function taskComplete(){
-                tasks--;
-                if(tasks <= 0){
-                    console.log("ARRAY LENGTH");
-                    console.log(context.length);
-                    console.log(JSON.stringify(context));
-                    res.render('searchResult', context);
-                    //res.redirect(301,'/searchResult');
-                }
-            }
-            
-            for(var x in rows){
-                sqlUser = rows[x].username;
-                var UserSqlStatement = 'SELECT firstName, lastName, username FROM Users WHERE Users.username = "' + sqlUser + '"';
-                pool.query(UserSqlStatement, function (err, Userinfo, fields) {
-
-                    var SubjectSqlStatement = 'SELECT description FROM Subjects LEFT JOIN ExpertSubjects ON ExpertSubjects.subject_id = Subjects.subject_id LEFT JOIN Users ON ExpertSubjects.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
-
-                    var ClassSqlStatement = 'SELECT description FROM Classes LEFT JOIN ExpertClasses ON ExpertClasses.class_id = Classes.class_id LEFT JOIN Users ON ExpertClasses.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
-
-                    var LinksSqlStatement = 'SELECT link, link_type FROM ExpertLinks LEFT JOIN Users ON ExpertLinks.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
-
-                    pool.query(SubjectSqlStatement, function (err, Subjects, fields) {
-
-                        var SubjectsString = JSON.stringify(Subjects);
-                        //console.log(SubjectsString);
-
-                        pool.query(ClassSqlStatement, function (err, Classes, fields) {
-
-                            var ClassesString = JSON.stringify(Classes);
-                            //console.log(ClassesString);
-
-                            pool.query(LinksSqlStatement, function (err, Links, fields) {
-                                var LinksString = JSON.stringify(Links);
-                                //console.log(LinksString);
-                                context.push({
-                                    Userinfo: Userinfo,
-                                    Subjects: Subjects,
-                                    Classes: Classes,
-                                    Links : Links
-                                });
-                                taskComplete();
-                                //console.log("scope1");
-                                //console.log(context);
-                            });
-                            //console.log("scope2");
-                            //console.log(context);
-                        });
-                    });
-                });
-            }
-            //console.log("scope3");
-            //console.log(context); 
-        });
-        //console.log("scope4");
-        //console.log(context); 
-    };
-    //res.render('searchResult');
+    res.render('searchResult');
 });
 
-/*app.post('/search/search', function (req, res) {
+app.post('/search/search', function (req, res) {
     //console.log(req.body)
     var context = [];
     var searchTermFormatted = "%" + req.body.searchTerm + "%";
-    //irstName LIKE ? OR lastname LIKE ?"
     pool.query("SELECT * FROM Users WHERE firstName LIKE ?", searchTermFormatted, function (err, rows, fields) {
         var sendData = JSON.stringify(rows);
         var tasks = 0;
-        //res.redirect(301,'/searchResult');
         for(var x in rows){ tasks++}
         //console.log(size);
         //res.send(sendData);
@@ -396,9 +322,8 @@ app.get('/searchResult', function (req, res, next) {
         function taskComplete(){
             tasks--;
             if(tasks <= 0){
-                console.log(context);
-                res.render('searchResult', context);
-                //res.redirect(301,'/searchResult');
+                //console.log(context);
+                res.render('searchResult',context);  
             }
         }
         
@@ -447,9 +372,7 @@ app.get('/searchResult', function (req, res, next) {
     });
     //console.log("scope4");
     //console.log(context); 
-
 });
-*/
 
 /*
 app.get('/addCourse', function(req, res, next)

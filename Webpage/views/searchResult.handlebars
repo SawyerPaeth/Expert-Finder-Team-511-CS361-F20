@@ -1,28 +1,93 @@
-<section class="jumbotron text-left">
-    <h3> Search Results for: CS 361 </h3>
-    <dl class="col">
-        {{#each this}}
-            <dt class = "col-2"><a href="./basic_profile.html">{{#each Userinfo}}{{this.firstName}} {{this.lastName}}{{/each}}</a></dt>
-            <dd class = "col-10">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm">
-                        Classes: {{#each Classes}} {{this.description}}{{/each}} 
-                    </div>
-                    <div class="col-sm">
-                    Skills:  {{#each Subjects}} {{this.description}}{{/each}} 
-                    </div>
-                    <div class="col-sm">
-                    Organization: Witness Protection Inc.
-                    </div>
-                </div>
-            </div>
-            </dd>
-        {{/each}}
-    </dd>
-</section>
+<div class = "container pt-5">
+    {{#each Userinfo}}
+    <h1 class = "text-center">{{this.firstName}} {{this.lastName}}: {{this.username}}</h1>
+    {{/each}}
+  </div>
+
+  <div class = "container pt-5">
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 pt-4 border-top border-left border-success">
+            <ul style="list-style-type:none;">
+                <h5 class="font-weight-bold"> Skills: </h5>
+                    {{#each Subjects}}
+                    <li>{{this.description}}</li>
+                    {{/each}}                    
+            </ul>
+        </div>
+        <div class="col-sm-3 pt-4 border-top border-right border-success">
+            <ul>
+                <h5 class="font-weight-bold"> Links: </h5>
+                <li>
+                    {{#each Links}}
+                        <a href="{{this.link}}""></a> 
+                    {{/each}}
+                    <a href="https://github.com/SawyerPaeth/Expert-Finder-Team-511-CS361-F20">GitHub.com/John-Doe</a>
+                </li>
+                <li>
+                    <a href="https://github.com/SawyerPaeth/Expert-Finder-Team-511-CS361-F20">Twitter.com/John-Doe</a>
+                </li>
+                <li>
+                    <a href="https://github.com/SawyerPaeth/Expert-Finder-Team-511-CS361-F20">LinkedIn.com/John-Doe</a>
+                </li>
+                
+            </ul>
+        </div>
+        <div class="col-sm-3"></div>
+        
+    </div> 
+   
+   
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border-bottom border-left border-success">
+            <ul style="list-style-type:none;">
+                <h5 class="font-weight-bold"> Classes: </h5>
+                    
+                    {{#each Classes}}
+                    <li>{{this.description}}</li>
+                    {{/each}}
+            </ul>
+        </div>
+        <div class="col-sm-3 border-bottom border-right border-success">
+            <ul style="list-style-type:none;">
+                <h5 class="font-weight-bold"> Organization: </h5>
+                <li>Witness Protection Inc.
+                </li>
+                
+            </ul>
+        </div>
+        <div class="col-sm-3"></div>
+    </div> 
+</div>
+   <div class = "container pt-5">
+    <h6 class = "text-center">
+        <a class="nav-link" href="/basicProfileModify"><button id="addSkillButton" type="button" class="btn btn-primary">Modify Profile</button></a>
+    </h6>
+</div>
+
     
 
+</div>
+   <div class = "container pt-5">
+    <h6 class = "text-center">
+        <a href=./searchResult.html>Back to results page</a>
+    </h6>
+</div>
+
+<section class="jumbotron text-center">
+    <h1> Search for an Expert</h1>
+    <h4> Search by skill, course,<br>organization or name </h4>
+    <br>
+<div class="row justify-content-center">
+    <div class="col=md-12">
+        <form class="form-horizontal"> 
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</div>
+</section>
 
 <section class="jumbotron text-left">
     <h3> Search Results for: CS 361 </h3>
@@ -91,6 +156,9 @@
             </div>
         </div>
     </dd>
+    
+
+
 </section>
 
 <section>
