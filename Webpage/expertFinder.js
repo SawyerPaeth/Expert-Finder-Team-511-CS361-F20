@@ -224,7 +224,7 @@ app.get('/basicProfile', function (req, res, next) {
 
         var LinksSqlStatement = 'SELECT link, link_type FROM ExpertLinks LEFT JOIN Users ON ExpertLinks.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
 
-        var OrganizationSqlStatement = 'SELECT organization FROM ExpertOrganization LEFT JOIN Users ON ExpertOrganization.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
+        var OrganizationSqlStatement = 'SELECT description FROM Organizations LEFT JOIN ExpertOrganizations ON ExpertOrganizations.org_id = Organizations.org_id LEFT JOIN Users ON ExpertOrganizations.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
         
         pool.query(SubjectSqlStatement, function (err, Subjects, fields) {
 
