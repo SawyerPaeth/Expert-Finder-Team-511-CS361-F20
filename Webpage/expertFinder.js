@@ -197,17 +197,14 @@ app.get('/basicProfile', function (req, res, next) {
     // So this is what I would recommend - have a passed in user, check for existance
     // if it doesn't exist, user the logged in user. 
     console.log(req.query);
-
     let isLoggedOn;
     isLoggedOn = false;
     if (req.user) {
-        console.log(req.user);
         isLoggedOn = true;
         sqlUser = req.user;
     };
 
     if (req.query.ExpertUser) {
-        console.log(req.query.ExpertUser);
         sqlUser = req.query.ExpertUser;
     }
     //   var sqlStatement = "SELECT description FROM Subjects WHERE subject_id IN (SELECT subject_id FROM ExpertSubjects WHERE user_id = 1)";
@@ -224,8 +221,6 @@ app.get('/basicProfile', function (req, res, next) {
 
         var LinksSqlStatement = 'SELECT link, link_type FROM ExpertLinks LEFT JOIN Users ON ExpertLinks.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
 
-        var OrganizationSqlStatement = 'SELECT organization FROM ExpertOrganization LEFT JOIN Users ON ExpertOrganization.user_id = Users.user_id WHERE Users.username = "' + sqlUser + '"';
-        
         pool.query(SubjectSqlStatement, function (err, Subjects, fields) {
 
             var SubjectsString = JSON.stringify(Subjects);
@@ -237,22 +232,14 @@ app.get('/basicProfile', function (req, res, next) {
                 console.log(ClassesString);
 
                 pool.query(LinksSqlStatement, function (err, Links, fields) {
-                    
                     var LinksString = JSON.stringify(Links);
                     console.log(LinksString);
-                    
-                    pool.query(OrganizationSqlStatement, function (err, Organization, fields) {
-
-                        var OrganizationString = JSON.stringify(Organization);
-                        console.log(OrganizationString);
-                        res.render('basicProfile', {
-                            isLoggedOn: isLoggedOn,
-                            Userinfo: Userinfo,
-                            Subjects: Subjects,
-                            Classes: Classes,
-                            Links : Links,
-                            Organization : Organization
-                        });
+                    res.render('basicProfile', {
+                        isLoggedOn: isLoggedOn,
+                        Userinfo: Userinfo,
+                        Subjects: Subjects,
+                        Classes: Classes,
+                        Links : Links
                     });
                 });
             });
