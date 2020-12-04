@@ -1,0 +1,73 @@
+<div class = "container pt-5">
+    {{#each Userinfo}}
+    <h1 class = "text-center">{{this.firstName}} {{this.lastName}}: {{this.username}}</h1>
+    {{/each}}
+  </div>
+
+  <div class = "container pt-5">
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 pt-4 border-top border-left border-success">
+            <ul>
+                <h5 class="font-weight-bold"> Skills: </h5>
+                    {{#each Subjects}}
+                    <li>{{this.description}}</li>
+                    {{/each}}                    
+            </ul>
+        </div>
+        <div class="col-sm-3 pt-4 border-top border-right border-success">
+            <ul>
+                <h5 class="font-weight-bold"> Links: </h5>
+                
+                    
+                    {{#each Links}}
+                    <li>
+                        <a href="{{this.link}}">{{this.link}}</a> 
+                    </li>
+                    {{/each}}
+                
+                
+            </ul>
+        </div>
+        <div class="col-sm-3"></div>
+        
+    </div> 
+   
+   
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3 border-bottom border-left border-success">
+            <ul>
+                <h5 class="font-weight-bold"> Classes: </h5>
+                    
+                    {{#each Classes}}
+                    <li>{{this.description}}</li>
+                    {{/each}}
+            </ul>
+        </div>
+        <div class="col-sm-3 border-bottom border-right border-success">
+            <ul>
+                <h5 class="font-weight-bold"> Organizations: </h5>
+                
+                    {{#each Organizations}}
+                    <li>{{this.description}}</li>
+                    {{/each}}
+            </ul>
+        </div>
+        <div class="col-sm-3"></div>
+    </div> 
+</div>
+   <div class = "container pt-5">
+    <h6 class = "text-center">
+        <a class="nav-link" href="/basicProfileModify"><button id="addSkillButton" type="button" class="btn btn-primary">Modify Profile</button></a>
+    </h6>
+</div>
+
+    
+
+</div>
+   <div class = "container pt-5">
+    <h6 class = "text-center">
+        <a href=./searchResult.html>Back to results page</a>
+    </h6>
+</div>

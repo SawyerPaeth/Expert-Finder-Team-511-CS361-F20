@@ -1,0 +1,33 @@
+<div class="row justify-content-md-center" style="margin-top: 30px">
+        <div class="col-md-6">
+
+        {{#if message}}
+            <div class="alert {{messageClass}}" role="alert">
+                {{message}}
+            </div>
+        {{/if}}
+
+    <form method="POST" action="/addExpertInfo">
+        <fieldset>
+              <legend>What are your Social Media links?</legend>
+              <div class="form-group">
+                <label for="expert_twitter">Twitter</label>
+        	<input name="expert_twitter" type="text" class="form-control" id="expert_twitter" placeholder="http://twitter.com/[username]">
+                </div>
+        	<div class="form-group">
+        		<label for="expert_github">GitHub</label>
+        		<input name="expert_github" type="text" class="form-control" id="expert_github" placeholder="http://github.com/[username]">
+        	</div>
+        	<div class="form-group">
+        		<label for="expert_linkedin">LinkedIn</label>
+        		<input name="expert_linkedin" type="text" class="form-control" id="expert_linkedin" placeholder="http://linkedin.com/in/[linkedinyourname]">
+        	</div>
+        </fieldset>
+        <fieldset>
+        	
+                </fieldset>
+                <br>
+                <button type="submit" class="btn btn-primary" id="submit_expert_info">Submit Expert Info</button>
+        </form>
+        </div>
+</div>
