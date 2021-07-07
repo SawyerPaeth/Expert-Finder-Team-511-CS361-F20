@@ -1,7 +1,6 @@
 # ExpertFinder
 
-The Expert Finder App was designed to connect Oregon State University students with experts in a wide variety of subjects.  Perhaps you have been trying to learn a new web framework
-but you feel that your progress has stalled.  With the Expert Finder App you could find and connect with someone who is willing to mentor you in that discipline. 
+The ExpertFinder app was designed to connect Oregon State University students with experts in a wide variety of subjects who are willing to provide mentorship and knowledge.  Perhaps there is a student out there trying to learn a new web framework but their progress has stalled. With ExpertFinder they could search for an expert in that particular framework, connect with them through the app and get help furthering their studies in that framework.
 
 ## Features
 - Sign up and create a profile to start your search for an expert
